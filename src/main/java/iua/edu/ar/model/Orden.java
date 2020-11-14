@@ -27,6 +27,11 @@ public class Orden implements Serializable {
 //	@Column(length = 100, nullable = false)
 //	private double numeroOrden;
 
+	@Column(length = 100, nullable = false)
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	private Date fechaRecepcion;
+	
 	@Column(length = 100)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -36,6 +41,17 @@ public class Orden implements Serializable {
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaPrevistaCarga;
+	
+	@Column(length = 100, nullable = false)
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	private Date fechaFinCarga;
+	
+	@Column(length = 100)
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	private Date fechaRecepcionPesajeFijal;
+	
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private Cliente cliente;
@@ -57,7 +73,72 @@ public class Orden implements Serializable {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private DatosCarga promedioDatosCarga;
+	
+	@Column(length = 100)
+	private String password;
+	
+	@Column(length = 100)
+	private String fecuencia;
 
+	public Date getFechaRecepcion() {
+		return fechaRecepcion;
+	}
+
+	public void setFechaRecepcion(Date fechaRecepcion) {
+		this.fechaRecepcion = fechaRecepcion;
+	}
+
+	public Date getFechaFinCarga() {
+		return fechaFinCarga;
+	}
+
+	public void setFechaFinCarga(Date fechaFinCarga) {
+		this.fechaFinCarga = fechaFinCarga;
+	}
+
+	public Date getFechaRecepcionPesajeFijal() {
+		return fechaRecepcionPesajeFijal;
+	}
+
+	public void setFechaRecepcionPesajeFijal(Date fechaRecepcionPesajeFijal) {
+		this.fechaRecepcionPesajeFijal = fechaRecepcionPesajeFijal;
+	}
+
+	public DatosCarga getUltimosDatosCarga() {
+		return ultimosDatosCarga;
+	}
+
+	public void setUltimosDatosCarga(DatosCarga ultimosDatosCarga) {
+		this.ultimosDatosCarga = ultimosDatosCarga;
+	}
+
+	public DatosCarga getPromedioDatosCarga() {
+		return promedioDatosCarga;
+	}
+
+	public void setPromedioDatosCarga(DatosCarga promedioDatosCarga) {
+		this.promedioDatosCarga = promedioDatosCarga;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getFecuencia() {
+		return fecuencia;
+	}
+
+	public void setFecuencia(String fecuencia) {
+		this.fecuencia = fecuencia;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 	/*
 	 * Cambiar el modelado del preset
