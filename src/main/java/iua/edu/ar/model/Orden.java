@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -24,61 +26,63 @@ public class Orden implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-//	@Column(length = 100, nullable = false)
-//	private double numeroOrden;
-
-	@Column(length = 100, nullable = false)
+	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaRecepcion;
-	
-	@Column(length = 100)
+
+	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaRecepcionPesajeInicial;
 
-	@Column(length = 100, nullable = false)
+	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaPrevistaCarga;
-	
-	@Column(length = 100, nullable = false)
+
+	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaFinCarga;
-	
-	@Column(length = 100)
+
+	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaRecepcionPesajeFijal;
-	
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "producto_id")
 	private Producto producto;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "camion_id")
 	private Camion camion;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "chofer_id")
 	private Chofer chofer;
 
 	@Column(length = 100)
 	private int estado;
-	
-	@OneToOne(cascade = CascadeType.ALL)
-	private DatosCarga ultimosDatosCarga;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	private DatosCarga promedioDatosCarga;
-	
-	@Column(length = 100)
+	// Revisar relaciones esquema con bucle de relacion en EE Schema workbench
+
+	/*
+	 * @OneToOne(cascade = CascadeType.ALL) private DatosCarga ultimosDatosCarga;
+	 * 
+	 * @OneToOne(cascade = CascadeType.ALL) private DatosCarga promedioDatosCarga;
+	 */
+
+	@Column(length = 100, nullable = true)
 	private String password;
-	
-	@Column(length = 100)
-	private String fecuencia;
+
+	@Column(length = 100, nullable = true)
+	private int fecuencia;
 
 	public Date getFechaRecepcion() {
 		return fechaRecepcion;
@@ -104,22 +108,6 @@ public class Orden implements Serializable {
 		this.fechaRecepcionPesajeFijal = fechaRecepcionPesajeFijal;
 	}
 
-	public DatosCarga getUltimosDatosCarga() {
-		return ultimosDatosCarga;
-	}
-
-	public void setUltimosDatosCarga(DatosCarga ultimosDatosCarga) {
-		this.ultimosDatosCarga = ultimosDatosCarga;
-	}
-
-	public DatosCarga getPromedioDatosCarga() {
-		return promedioDatosCarga;
-	}
-
-	public void setPromedioDatosCarga(DatosCarga promedioDatosCarga) {
-		this.promedioDatosCarga = promedioDatosCarga;
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -128,29 +116,24 @@ public class Orden implements Serializable {
 		this.password = password;
 	}
 
-	public String getFecuencia() {
+	public int getFecuencia() {
 		return fecuencia;
 	}
 
-	public void setFecuencia(String fecuencia) {
+	public void setFecuencia(int fecuencia) {
 		this.fecuencia = fecuencia;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	/*
 	 * Cambiar el modelado del preset
-	 * */
-	@Column(length = 100, nullable = false)
+	 */
+
+	@Column(length = 100, nullable = true)
 	private double preset;
 
 	@Column(length = 50, nullable = true, unique = true)
 	private String codigoExterno;
 
-	
-	
 	public String checkBasicData() {
 
 		if (getChofer() == null)
@@ -171,21 +154,7 @@ public class Orden implements Serializable {
 		return null;
 
 	}
-/*
-	public Orden(Orden orden) {
-		this.codigoExterno = orden.codigoExterno;
 
-//		this.numeroOrden = orden.numeroOrden;
-		this.camion = orden.getCamion();
-		this.chofer = orden.getChofer();
-		this.cliente = orden.getCliente();
-		this.producto = orden.getProducto();
-		this.fechaPrevistaCarga = orden.fechaPrevistaCarga;
-		this.preset = orden.preset;
-		this.estado = 0;
-
-	}
-*/
 	// Getters and setters
 
 	public long getId() {
@@ -195,14 +164,6 @@ public class Orden implements Serializable {
 	public void setId(long id) {
 		this.id = id;
 	}
-
-//	public double getNumeroOrden() {
-//		return numeroOrden;
-//	}
-//
-//	public void setNumeroOrden(double numeroOrden) {
-//		this.numeroOrden = numeroOrden;
-//	}
 
 	public Date getFechaRecepcionPesajeInicial() {
 		return fechaRecepcionPesajeInicial;
