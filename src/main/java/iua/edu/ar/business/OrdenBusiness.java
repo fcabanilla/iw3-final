@@ -44,6 +44,9 @@ public class OrdenBusiness implements IOrdenBusiness {
 	@Override
 	public Orden add(Orden orden) throws BusinessException {
 		try {
+			if(orden.checkBasicData())
+				orden.setEstado(1);
+			
 			return ordenDAO.save(orden);
 		} catch (Exception e) {
 			throw new BusinessException(e);
@@ -64,7 +67,17 @@ public class OrdenBusiness implements IOrdenBusiness {
 
 	@Override
 	public Orden update(Orden orden) throws NotFoundException, BusinessException {
-		load(orden.getId());
+		Orden ordenDB = load(orden.getId());
+		
+		ordenDAO.save(ordenDB);
+		
+		//ordenDB.setUltimosDatosCarga(ultimosDatosCarga);
+		
+		orden.partialUpdate(ordenDB);
+		
+		if(orden.checkBasicData())
+			orden.setEstado(1);		
+
 		return ordenDAO.save(orden);
 
 	}

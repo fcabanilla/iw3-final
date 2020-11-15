@@ -14,9 +14,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
+@DynamicUpdate
 @Table(name = "ordenes")
 public class Orden implements Serializable {
 
@@ -35,11 +37,6 @@ public class Orden implements Serializable {
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaRecepcionPesajeInicial;
-
-	@Column(length = 100, nullable = true)
-	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-	private Date fechaPrevistaCarga;
 
 	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
@@ -68,7 +65,7 @@ public class Orden implements Serializable {
 	private Chofer chofer;
 
 	@Column(length = 100)
-	private int estado;
+	private int estado = 0;
 
 	@Column(length = 100, nullable = true)
 	private DatosCarga ultimosDatosCarga;
@@ -87,15 +84,94 @@ public class Orden implements Serializable {
 	 */
 
 	@Column(length = 100, nullable = true)
-	private double preset;
+	private int preset;
 
 	@Column(length = 50, nullable = true, unique = true)
 	private String codigoExterno;
+	
+	@Column(length = 100, nullable = true)
+	private Double pesoInicial;
 
+	public void partialUpdate(Orden ordenDB) {
+		if(this.getCamion() == null) 
+			this.setCamion(ordenDB.getCamion());
+		
+		if(this.getChofer() == null) 
+			this.setChofer(ordenDB.getChofer());
+		
+		if(this.getCliente() == null) 
+			this.setCliente(ordenDB.getCliente());
+		
+		if(this.getCodigoExterno() == null) 
+			this.setCodigoExterno(ordenDB.getCodigoExterno());
+		
+		if(this.getFechaRecepcion() == null) 
+			this.setFechaRecepcion(ordenDB.getFechaRecepcion());
+		
+		if(this.getPreset() == 0)
+			this.setPreset(ordenDB.getPreset());
+		
+		if(this.getProducto() == null)
+			this.setProducto(ordenDB.getProducto());
+		
+	}
+	
+	public boolean checkBasicData() {
+		if(this.getCamion() == null) 
+			return false;
+		
+		if(this.getChofer() == null) 
+			return false;
+		
+		if(this.getCliente() == null) 
+			return false;
+		
+		if(this.getCodigoExterno() == null) 
+			return false;
+		
+//		if(this.getFechaRecepcion() == null) 
+//			return false;
+		
+		if(this.getPreset() == 0)
+			return false;
+		
+		if(this.getProducto() == null)
+			return false;
+		
+		return true;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// Getters and setters
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public long getId() {
 		return id;
+	}
+
+	public Double getPesoInicial() {
+		return pesoInicial;
+	}
+
+	public void setPesoInicial(Double pesoInicial) {
+		this.pesoInicial = pesoInicial;
 	}
 
 	public void setId(long id) {
@@ -116,14 +192,6 @@ public class Orden implements Serializable {
 
 	public void setFechaRecepcionPesajeInicial(Date fechaRecepcionPesajeInicial) {
 		this.fechaRecepcionPesajeInicial = fechaRecepcionPesajeInicial;
-	}
-
-	public Date getFechaPrevistaCarga() {
-		return fechaPrevistaCarga;
-	}
-
-	public void setFechaPrevistaCarga(Date fechaPrevistaCarga) {
-		this.fechaPrevistaCarga = fechaPrevistaCarga;
 	}
 
 	public Date getFechaFinCarga() {
@@ -214,11 +282,11 @@ public class Orden implements Serializable {
 		this.fecuencia = fecuencia;
 	}
 
-	public double getPreset() {
+	public int getPreset() {
 		return preset;
 	}
 
-	public void setPreset(double preset) {
+	public void setPreset(int preset) {
 		this.preset = preset;
 	}
 
@@ -229,5 +297,4 @@ public class Orden implements Serializable {
 	public void setCodigoExterno(String codigoExterno) {
 		this.codigoExterno = codigoExterno;
 	}
-
 }
