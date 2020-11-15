@@ -70,6 +70,7 @@ public class OrdenBusiness implements IOrdenBusiness {
 	}
 
 	@Override
+	// Sin uso actualmente
 	public Orden load(String codigoExterno) throws NotFoundException, BusinessException {
 		Optional<Orden> op;
 		try {
@@ -82,27 +83,5 @@ public class OrdenBusiness implements IOrdenBusiness {
 		}
 		return op.get();
 	}
-/*
-	@Override
-	public Orden asegurarOrden(Orden orden) throws BusinessException {
-		Orden o = null;
-		try {
-			o = load(orden.getCodigoExterno());
-
-			// Colocar aquí los datos recibidos no opcionales
-		} catch (NotFoundException e) {
-			o = new Orden(orden);
-//			o.setNumeroOrden(orden.getNumeroOrden());
-			o.setCamion(orden.getCamion());
-			o.setChofer(orden.getChofer());
-			o.setCliente(orden.getCliente());
-			o.setFechaPrevistaCarga(orden.getFechaPrevistaCarga());
-			o.setPreset(orden.getPreset());
-			o.setEstado(orden.getEstado());
-		}
-		
-		return ordenDAO.save(o);
-	}
-	*/
 
 }

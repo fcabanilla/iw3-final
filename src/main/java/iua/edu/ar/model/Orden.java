@@ -49,7 +49,7 @@ public class Orden implements Serializable {
 	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-	private Date fechaRecepcionPesajeFijal;
+	private Date fechaRecepcionPesajeFinal;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cliente_id")
@@ -70,59 +70,17 @@ public class Orden implements Serializable {
 	@Column(length = 100)
 	private int estado;
 
-	// Revisar relaciones esquema con bucle de relacion en EE Schema workbench
+	@Column(length = 100, nullable = true)
+	private DatosCarga ultimosDatosCarga;
 
-	/*
-	 * @OneToOne(cascade = CascadeType.ALL) private DatosCarga ultimosDatosCarga;
-	 * 
-	 * @OneToOne(cascade = CascadeType.ALL) private DatosCarga promedioDatosCarga;
-	 */
+	@Column(length = 100, nullable = true)
+	private DatosCarga promedioDatosCarga;
 
 	@Column(length = 100, nullable = true)
 	private String password;
 
 	@Column(length = 100, nullable = true)
 	private int fecuencia;
-
-	public Date getFechaRecepcion() {
-		return fechaRecepcion;
-	}
-
-	public void setFechaRecepcion(Date fechaRecepcion) {
-		this.fechaRecepcion = fechaRecepcion;
-	}
-
-	public Date getFechaFinCarga() {
-		return fechaFinCarga;
-	}
-
-	public void setFechaFinCarga(Date fechaFinCarga) {
-		this.fechaFinCarga = fechaFinCarga;
-	}
-
-	public Date getFechaRecepcionPesajeFijal() {
-		return fechaRecepcionPesajeFijal;
-	}
-
-	public void setFechaRecepcionPesajeFijal(Date fechaRecepcionPesajeFijal) {
-		this.fechaRecepcionPesajeFijal = fechaRecepcionPesajeFijal;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public int getFecuencia() {
-		return fecuencia;
-	}
-
-	public void setFecuencia(int fecuencia) {
-		this.fecuencia = fecuencia;
-	}
 
 	/*
 	 * Cambiar el modelado del preset
@@ -134,27 +92,6 @@ public class Orden implements Serializable {
 	@Column(length = 50, nullable = true, unique = true)
 	private String codigoExterno;
 
-	public String checkBasicData() {
-
-		if (getChofer() == null)
-			return "El atributo 'Chofer' es obligatorio";
-
-		if (getCamion() == null)
-			return "El atributo 'Camion' es obligatorio";
-
-		if (getCliente() == null)
-			return "El atributo 'Cliente' es obligatorio";
-
-		if (getProducto() == null)
-			return "El atributo 'Producto' es obligatorio";
-
-		if (getCodigoExterno() == null || getCodigoExterno().trim().length() == 0)
-			return "El atributo 'orden.codigoExterno' es obligatorio";
-
-		return null;
-
-	}
-
 	// Getters and setters
 
 	public long getId() {
@@ -163,6 +100,14 @@ public class Orden implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public Date getFechaRecepcion() {
+		return fechaRecepcion;
+	}
+
+	public void setFechaRecepcion(Date fechaRecepcion) {
+		this.fechaRecepcion = fechaRecepcion;
 	}
 
 	public Date getFechaRecepcionPesajeInicial() {
@@ -179,6 +124,22 @@ public class Orden implements Serializable {
 
 	public void setFechaPrevistaCarga(Date fechaPrevistaCarga) {
 		this.fechaPrevistaCarga = fechaPrevistaCarga;
+	}
+
+	public Date getFechaFinCarga() {
+		return fechaFinCarga;
+	}
+
+	public void setFechaFinCarga(Date fechaFinCarga) {
+		this.fechaFinCarga = fechaFinCarga;
+	}
+
+	public Date getFechaRecepcionPesajeFinal() {
+		return fechaRecepcionPesajeFinal;
+	}
+
+	public void setFechaRecepcionPesajeFinal(Date fechaRecepcionPesajeFinal) {
+		this.fechaRecepcionPesajeFinal = fechaRecepcionPesajeFinal;
 	}
 
 	public Cliente getCliente() {
@@ -213,14 +174,6 @@ public class Orden implements Serializable {
 		this.chofer = chofer;
 	}
 
-	public String getCodigoExterno() {
-		return codigoExterno;
-	}
-
-	public void setCodigoExterno(String codigoExterno) {
-		this.codigoExterno = codigoExterno;
-	}
-
 	public int getEstado() {
 		return estado;
 	}
@@ -229,12 +182,52 @@ public class Orden implements Serializable {
 		this.estado = estado;
 	}
 
+	public DatosCarga getUltimosDatosCarga() {
+		return ultimosDatosCarga;
+	}
+
+	public void setUltimosDatosCarga(DatosCarga ultimosDatosCarga) {
+		this.ultimosDatosCarga = ultimosDatosCarga;
+	}
+
+	public DatosCarga getPromedioDatosCarga() {
+		return promedioDatosCarga;
+	}
+
+	public void setPromedioDatosCarga(DatosCarga promedioDatosCarga) {
+		this.promedioDatosCarga = promedioDatosCarga;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public int getFecuencia() {
+		return fecuencia;
+	}
+
+	public void setFecuencia(int fecuencia) {
+		this.fecuencia = fecuencia;
+	}
+
 	public double getPreset() {
 		return preset;
 	}
 
 	public void setPreset(double preset) {
 		this.preset = preset;
+	}
+
+	public String getCodigoExterno() {
+		return codigoExterno;
+	}
+
+	public void setCodigoExterno(String codigoExterno) {
+		this.codigoExterno = codigoExterno;
 	}
 
 }

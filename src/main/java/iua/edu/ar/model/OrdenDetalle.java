@@ -15,9 +15,6 @@ import javax.persistence.Table;
 @Table(name = "orden_detalle")
 public class OrdenDetalle implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1463037298087273309L;
 
 	@Id
@@ -27,12 +24,5 @@ public class OrdenDetalle implements Serializable {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "datos_carga_id")
 	private DatosCarga datosCarga;
-
-	/*
-	 * 
-	 * @ManyToOne
-	 * 
-	 * @JoinColumn(name="persona_nombre") private Persona persona;
-	 */
 
 }
