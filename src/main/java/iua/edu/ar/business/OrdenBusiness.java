@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import iua.edu.ar.business.exception.BusinessException;
 import iua.edu.ar.business.exception.NotFoundException;
 import iua.edu.ar.model.Orden;
+import iua.edu.ar.model.OrdenDetalle;
+import iua.edu.ar.model.persistence.OrdenDetalleRepository;
 import iua.edu.ar.model.persistence.OrdenRepository;
 
 @Service
@@ -17,6 +19,9 @@ public class OrdenBusiness implements IOrdenBusiness {
 
 	@Autowired
 	private OrdenRepository ordenDAO;
+
+	@Autowired
+	private OrdenDetalleRepository ordenDetalleDAO;
 
 	@Override
 	public Orden load(Long id) throws NotFoundException, BusinessException {
@@ -77,21 +82,6 @@ public class OrdenBusiness implements IOrdenBusiness {
 
 		return ordenDAO.save(orden);
 
-	}
-
-	@Override
-	// Sin uso actualmente
-	public Orden load(String codigoExterno) throws NotFoundException, BusinessException {
-		Optional<Orden> op;
-		try {
-			op = ordenDAO.findFirstByCodigoExterno(codigoExterno);
-		} catch (Exception e) {
-			throw new BusinessException(e);
-		}
-		if (!op.isPresent()) {
-			throw new NotFoundException("La orden con código externo " + codigoExterno + " no se encuentra en la BD");
-		}
-		return op.get();
 	}
 
 	@Override

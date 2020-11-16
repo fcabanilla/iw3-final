@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
@@ -65,12 +66,16 @@ public class Orden implements Serializable {
 
 	@Column(length = 100)
 	private int estado = 0;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "orden_detalle_id")
+	private OrdenDetalle ordenDetalle;
 
-	@Column(length = 100)
-	private DatosCarga ultimosDatosCarga;
+	@OneToOne(cascade = CascadeType.ALL)
+	private DatoCarga ultimosDatosCarga;
 
-	@Column(length = 100)
-	private DatosCarga promedioDatosCarga;
+	@OneToOne(cascade = CascadeType.ALL)
+	private DatoCarga promedioDatosCarga;
 
 	@Column(length = 100)
 	private String password;
@@ -230,19 +235,19 @@ public class Orden implements Serializable {
 		this.estado = estado;
 	}
 
-	public DatosCarga getUltimosDatosCarga() {
+	public DatoCarga getUltimosDatosCarga() {
 		return ultimosDatosCarga;
 	}
 
-	public void setUltimosDatosCarga(DatosCarga ultimosDatosCarga) {
+	public void setUltimosDatosCarga(DatoCarga ultimosDatosCarga) {
 		this.ultimosDatosCarga = ultimosDatosCarga;
 	}
 
-	public DatosCarga getPromedioDatosCarga() {
+	public DatoCarga getPromedioDatosCarga() {
 		return promedioDatosCarga;
 	}
 
-	public void setPromedioDatosCarga(DatosCarga promedioDatosCarga) {
+	public void setPromedioDatosCarga(DatoCarga promedioDatosCarga) {
 		this.promedioDatosCarga = promedioDatosCarga;
 	}
 
@@ -277,4 +282,6 @@ public class Orden implements Serializable {
 	public void setCodigoExterno(String codigoExterno) {
 		this.codigoExterno = codigoExterno;
 	}
+	
+	
 }

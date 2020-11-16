@@ -22,7 +22,4 @@ public interface IOrdenBusiness {
 
 	public Void cierreOrden(Orden orden) throws BusinessException, NotFoundException;
 
-	// Sin uso actualmente
-	public Orden load(String codigoExterno) throws NotFoundException, BusinessException;
-
 }

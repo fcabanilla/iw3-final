@@ -15,35 +15,31 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name = "datos_carga")
-public class DatosCarga implements Serializable {
+public class DatoCarga implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8975778939793530631L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	protected long id;
 
 	@Column(length = 100)
-	private long masaAcumulada;
+	protected long masaAcumulada;
 
 	@Column(length = 100)
-	private long densidadProducto;
+	protected long densidadProducto;
 
 	@Column(length = 100)
-	private long temperaturaProducto;
+	protected long temperaturaProducto;
 
 	@Column(length = 100)
-	private long caudal;
+	protected long caudal;
 
-	@OneToMany(targetEntity = OrdenDetalle.class, mappedBy = "datosCarga", fetch = FetchType.LAZY)
-	@JsonBackReference
-	private List<OrdenDetalle> ordenDetalleList;
-	
 	/*
 	 * GETTERS AND SETTERS
 	 */
+
 	public long getId() {
 		return id;
 	}
