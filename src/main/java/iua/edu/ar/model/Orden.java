@@ -65,7 +65,7 @@ public class Orden implements Serializable {
 
 	@Column(length = 100)
 	private int estado = 0;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "orden_detalle_id")
 	private OrdenDetalle ordenDetalle;
@@ -76,11 +76,17 @@ public class Orden implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private DatoCarga promedioDatosCarga;
 
-	@Column(length = 100)
-	private String password;
+	@Column(length = 100, nullable = true)
+	private int password;
 
 	@Column(length = 100)
 	private int fecuencia;
+
+	@Column(length = 100, nullable = true)
+	private Double pesoInicial;
+
+	@Column(length = 100, nullable = true)
+	private Double pesoFinal;
 
 	/*
 	 * Cambiar el modelado del preset
@@ -91,9 +97,6 @@ public class Orden implements Serializable {
 
 	@Column(length = 50, nullable = true, unique = true)
 	private String codigoExterno;
-
-	@Column(length = 100, nullable = true)
-	private Double pesoInicial;
 
 	public void partialUpdate(Orden ordenDB) {
 		if (this.getCamion() == null)
@@ -132,7 +135,7 @@ public class Orden implements Serializable {
 		if (this.getCodigoExterno() == null)
 			return false;
 
-		if(this.getFechaRecepcion() == null) 
+		if (this.getFechaRecepcion() == null)
 			return false;
 
 		if (this.getPreset() == 0)
@@ -148,14 +151,6 @@ public class Orden implements Serializable {
 
 	public long getId() {
 		return id;
-	}
-
-	public Double getPesoInicial() {
-		return pesoInicial;
-	}
-
-	public void setPesoInicial(Double pesoInicial) {
-		this.pesoInicial = pesoInicial;
 	}
 
 	public void setId(long id) {
@@ -246,15 +241,23 @@ public class Orden implements Serializable {
 		return promedioDatosCarga;
 	}
 
+	public OrdenDetalle getOrdenDetalle() {
+		return ordenDetalle;
+	}
+
+	public void setOrdenDetalle(OrdenDetalle ordenDetalle) {
+		this.ordenDetalle = ordenDetalle;
+	}
+
 	public void setPromedioDatosCarga(DatoCarga promedioDatosCarga) {
 		this.promedioDatosCarga = promedioDatosCarga;
 	}
 
-	public String getPassword() {
+	public int getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(int password) {
 		this.password = password;
 	}
 
@@ -281,6 +284,21 @@ public class Orden implements Serializable {
 	public void setCodigoExterno(String codigoExterno) {
 		this.codigoExterno = codigoExterno;
 	}
-	
-	
+
+	public Double getPesoInicial() {
+		return pesoInicial;
+	}
+
+	public void setPesoInicial(Double pesoInicial) {
+		this.pesoInicial = pesoInicial;
+	}
+
+	public Double getPesoFinal() {
+		return pesoFinal;
+	}
+
+	public void setPesoFinal(Double pesoFinal) {
+		this.pesoFinal = pesoFinal;
+	}
+
 }
