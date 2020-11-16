@@ -101,7 +101,7 @@ public class OrdenRestController {
 		}
 	}
 	
-	@PostMapping(value = "/cierreOrden", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/cierre-orden", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> cierreOrden(@RequestBody Orden orden) throws NotFoundException {
 		try {
 			ordenBusiness.cierreOrden(orden);
