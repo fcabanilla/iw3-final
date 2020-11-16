@@ -23,4 +23,5 @@ public interface IOrdenBusiness {
 	public Orden load(String codigoExterno) throws NotFoundException, BusinessException;
 	
 	public void addPesajeInicial(Orden orden) throws NotFoundException, BusinessException;
+	public void addPesajeFinal(Orden orden) throws NotFoundException, BusinessException;
 }

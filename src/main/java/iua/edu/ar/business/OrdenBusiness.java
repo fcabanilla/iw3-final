@@ -109,5 +109,27 @@ public class OrdenBusiness implements IOrdenBusiness {
 		}
 	
 	}
+	
+	@Override
+	public void  addPesajeFinal(Orden orden) throws NotFoundException, BusinessException {
+		try {
+			Orden ordenDb= load(orden.getId());
+			if(ordenDb.getEstado()==3) {
+				
+				ordenDb.setPesoFinal(orden.getPesoFinal());
+				ordenDb.setFechaRecepcionPesajeFinal(orden.getFechaRecepcionPesajeFinal());
+				ordenDb.setEstado(4);
+				ordenDAO.save(ordenDb);
+				
+			}else {
+				throw new BusinessException("El estado de la orden es distinto a 1");
+			}
+		} catch (EmptyResultDataAccessException el) {
+			throw new NotFoundException("No se encuentra la orden con id = " + orden.getId() + ".");
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+	
+	}
 
 }

@@ -81,9 +81,12 @@ public class Orden implements Serializable {
 
 	@Column(length = 100, nullable = true)
 	private int fecuencia;
-	
+
 	@Column(length = 100, nullable = true)
 	private Double pesoInicial;
+	
+	@Column(length = 100, nullable = true)
+	private Double pesoFinal;
 
 	/*
 	 * Cambiar el modelado del preset
@@ -238,6 +241,14 @@ public class Orden implements Serializable {
 
 	public void setPesoInicial(Double pesoInicial) {
 		this.pesoInicial = pesoInicial;
+	}
+	
+	public Double getPesoFinal() {
+		return pesoFinal;
+	}
+
+	public void setPesoFinal(Double pesoFinal) {
+		this.pesoFinal = pesoFinal;
 	}
 
 }
