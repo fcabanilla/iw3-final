@@ -84,4 +84,30 @@ public class OrdenBusiness implements IOrdenBusiness {
 		return op.get();
 	}
 
+	@Override
+	public void  addPesajeInicial(Orden orden) throws NotFoundException, BusinessException {
+		try {
+			Orden ordenDb= load(orden.getId());
+			if(ordenDb.getEstado()==1) {
+				
+				ordenDb.setPesoInicial(orden.getPesoInicial());
+				ordenDb.setFechaRecepcionPesajeInicial(orden.getFechaRecepcionPesajeInicial());
+				ordenDb.setEstado(2); 
+				String pass="";
+				for (int i = 0; i < 5; i++) {
+					pass=(int) (Math.random() * 9) + 1 + pass ;
+				}
+				ordenDb.setPassword( Integer. parseInt(pass));
+				ordenDAO.save(ordenDb);
+			}else {
+				throw new BusinessException("El estado de la orden es distinto a 1");
+			}
+		} catch (EmptyResultDataAccessException el) {
+			throw new NotFoundException("No se encuentra la orden con id = " + orden.getId() + ".");
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+	
+	}
+
 }

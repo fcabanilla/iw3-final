@@ -21,5 +21,6 @@ public interface IOrdenBusiness {
 	// Extras
 	// Sin uso actualmente
 	public Orden load(String codigoExterno) throws NotFoundException, BusinessException;
-
+	
+	public void addPesajeInicial(Orden orden) throws NotFoundException, BusinessException;
 }

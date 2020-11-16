@@ -87,7 +87,22 @@ public class OrdenRestController {
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-
+	
+	@PostMapping(value = "/pesaje-inicial", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> addPesajeInicial(@RequestBody Orden orden) {
+		try {
+			ordenBusiness.addPesajeInicial(orden);
+			
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.set("location", Constantes.URL_ORDENES + '/' + orden.getId());
+			return new ResponseEntity<String>(responseHeaders, HttpStatus.CREATED);
+			
+		} catch (BusinessException e) {
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		}
+	}
 	@DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> delete(@PathVariable("id") Long id) {
 		try {

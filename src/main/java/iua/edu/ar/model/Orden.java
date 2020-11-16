@@ -77,10 +77,13 @@ public class Orden implements Serializable {
 	private DatosCarga promedioDatosCarga;
 
 	@Column(length = 100, nullable = true)
-	private String password;
+	private int password;
 
 	@Column(length = 100, nullable = true)
 	private int fecuencia;
+	
+	@Column(length = 100, nullable = true)
+	private Double pesoInicial;
 
 	/*
 	 * Cambiar el modelado del preset
@@ -198,11 +201,11 @@ public class Orden implements Serializable {
 		this.promedioDatosCarga = promedioDatosCarga;
 	}
 
-	public String getPassword() {
+	public int getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(int password) {
 		this.password = password;
 	}
 
@@ -228,6 +231,13 @@ public class Orden implements Serializable {
 
 	public void setCodigoExterno(String codigoExterno) {
 		this.codigoExterno = codigoExterno;
+	}
+	public Double getPesoInicial() {
+		return pesoInicial;
+	}
+
+	public void setPesoInicial(Double pesoInicial) {
+		this.pesoInicial = pesoInicial;
 	}
 
 }
