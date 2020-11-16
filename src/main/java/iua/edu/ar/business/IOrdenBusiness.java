@@ -4,6 +4,7 @@ import java.util.List;
 
 import iua.edu.ar.business.exception.BusinessException;
 import iua.edu.ar.business.exception.NotFoundException;
+import iua.edu.ar.business.exception.PasswordException;
 import iua.edu.ar.model.Orden;
 
 public interface IOrdenBusiness {
@@ -21,5 +22,7 @@ public interface IOrdenBusiness {
 	// Extras
 	// Sin uso actualmente
 	public Orden load(String codigoExterno) throws NotFoundException, BusinessException;
+
+	public Boolean checkPassword(Orden orden) throws NotFoundException, BusinessException, PasswordException;
 
 }

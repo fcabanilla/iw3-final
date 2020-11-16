@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import iua.edu.ar.business.exception.BusinessException;
 import iua.edu.ar.business.exception.NotFoundException;
+import iua.edu.ar.business.exception.PasswordException;
 import iua.edu.ar.model.Orden;
 import iua.edu.ar.model.persistence.OrdenRepository;
 
@@ -95,6 +96,16 @@ public class OrdenBusiness implements IOrdenBusiness {
 			throw new NotFoundException("La orden con código externo " + codigoExterno + " no se encuentra en la BD");
 		}
 		return op.get();
+	}
+
+	@Override
+	public Boolean checkPassword(Orden orden) throws NotFoundException, BusinessException, PasswordException {
+		Orden ordenDB = load(orden.getId());
+		if (orden.checkPassword(ordenDB.getPassword()) && ordenDB.getEstado() == 2) {
+			return true;
+		}
+
+		throw new PasswordException("La contrasenia no es correcta");
 	}
 
 }

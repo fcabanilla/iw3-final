@@ -116,7 +116,7 @@ public class Orden implements Serializable {
 		
 	}
 	
-	public boolean checkBasicData() {
+	public Boolean checkBasicData() {
 		if(this.getCamion() == null) 
 			return false;
 		
@@ -129,8 +129,8 @@ public class Orden implements Serializable {
 		if(this.getCodigoExterno() == null) 
 			return false;
 		
-//		if(this.getFechaRecepcion() == null) 
-//			return false;
+		if(this.getFechaRecepcion() == null) 
+			return false;
 		
 		if(this.getPreset() == 0)
 			return false;
@@ -141,7 +141,11 @@ public class Orden implements Serializable {
 		return true;
 	}
 
-	
+	public Boolean checkPassword(String password) {
+		if(this.getPassword().toString().equals(password))
+			return true;
+		return false;
+	}
 	
 	
 	
