@@ -1,46 +1,58 @@
 package iua.edu.ar.model;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
-@Table(name = "datos_carga")
-public class DatosCarga implements Serializable {
+@Inheritance(strategy=InheritanceType.JOINED)
+public class DatoCarga implements Serializable {
 	/**
 	 * 
 	 */
+	
+	
 	private static final long serialVersionUID = -8975778939793530631L;
+		
+	public DatoCarga(long masaAcumulada, long densidadProducto, long temperaturaProducto,
+			long caudal) {
+//		super();
+		this.masaAcumulada = masaAcumulada;
+		this.densidadProducto = densidadProducto;
+		this.temperaturaProducto = temperaturaProducto;
+		this.caudal = caudal;
+	}
+	
+	public DatoCarga() {
+		
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-
-	@Column(length = 100)
-	private long masaAcumulada;
-
-	@Column(length = 100)
-	private long densidadProducto;
-
-	@Column(length = 100)
-	private long temperaturaProducto;
-
-	@Column(length = 100)
-	private long caudal;
-
-	@OneToMany(targetEntity = OrdenDetalle.class, mappedBy = "datosCarga", fetch = FetchType.LAZY)
-	@JsonBackReference
-	private List<OrdenDetalle> ordenDetalleList;
+	protected long id;
 	
+	@Column(name ="fecha", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = true)
+	protected Date fecha;
+
+	@Column(length = 100)
+	protected long masaAcumulada;
+
+	@Column(length = 100)
+	protected long densidadProducto;
+
+	@Column(length = 100)
+	protected long temperaturaProducto;
+
+	@Column(length = 100)
+	protected long caudal;
+
 	/*
 	 * GETTERS AND SETTERS
 	 */
@@ -74,6 +86,14 @@ public class DatosCarga implements Serializable {
 
 	public void setTemperaturaProducto(long temperaturaProducto) {
 		this.temperaturaProducto = temperaturaProducto;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
 	}
 
 	public long getCaudal() {

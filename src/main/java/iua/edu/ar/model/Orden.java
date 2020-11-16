@@ -47,6 +47,11 @@ public class Orden implements Serializable {
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaRecepcionPesajeFinal;
+	
+//	@Column(length = 100, nullable = true)
+//	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+//	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+//	private Date fechaUltimoOrdenDetalle;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cliente_id")
@@ -67,11 +72,11 @@ public class Orden implements Serializable {
 	@Column(length = 100)
 	private int estado = 0;
 
-	@Column(length = 100, nullable = true)
-	private DatosCarga ultimosDatosCarga;
+	@OneToOne(cascade =  CascadeType.ALL)
+	private UltimoDatoCarga ultimosDatosCarga;
 
-	@Column(length = 100, nullable = true)
-	private DatosCarga promedioDatosCarga;
+	@OneToOne(cascade =  CascadeType.ALL)
+	private PromedioDatoCarga promedioDatosCarga;
 
 	@Column(length = 100, nullable = true)
 	private String password;
@@ -147,35 +152,11 @@ public class Orden implements Serializable {
 		return false;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
 	// Getters and setters
-	
-	
-	
-	
-	
-	
-	
-	
 	
 
 	public long getId() {
 		return id;
-	}
-
-	public Double getPesoInicial() {
-		return pesoInicial;
-	}
-
-	public void setPesoInicial(Double pesoInicial) {
-		this.pesoInicial = pesoInicial;
 	}
 
 	public void setId(long id) {
@@ -254,19 +235,19 @@ public class Orden implements Serializable {
 		this.estado = estado;
 	}
 
-	public DatosCarga getUltimosDatosCarga() {
+	public UltimoDatoCarga getUltimosDatosCarga() {
 		return ultimosDatosCarga;
 	}
 
-	public void setUltimosDatosCarga(DatosCarga ultimosDatosCarga) {
+	public void setUltimosDatosCarga(UltimoDatoCarga ultimosDatosCarga) {
 		this.ultimosDatosCarga = ultimosDatosCarga;
 	}
 
-	public DatosCarga getPromedioDatosCarga() {
+	public PromedioDatoCarga getPromedioDatosCarga() {
 		return promedioDatosCarga;
 	}
 
-	public void setPromedioDatosCarga(DatosCarga promedioDatosCarga) {
+	public void setPromedioDatosCarga(PromedioDatoCarga promedioDatosCarga) {
 		this.promedioDatosCarga = promedioDatosCarga;
 	}
 
@@ -301,4 +282,30 @@ public class Orden implements Serializable {
 	public void setCodigoExterno(String codigoExterno) {
 		this.codigoExterno = codigoExterno;
 	}
+
+	public Double getPesoInicial() {
+		return pesoInicial;
+	}
+
+	public void setPesoInicial(Double pesoInicial) {
+		this.pesoInicial = pesoInicial;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
 }
