@@ -18,7 +18,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@DynamicUpdate
 @Table(name = "ordenes")
 public class Orden implements Serializable {
 

@@ -21,5 +21,8 @@ public interface IOrdenBusiness {
 	// Extras
 
 	public Void cierreOrden(Orden orden) throws BusinessException, NotFoundException;
+	
+	public List<Orden> listOrdenConciliacion(Orden orden) throws BusinessException, NotFoundException;
+
 
 }

@@ -20,6 +20,7 @@ public class DatoCarga implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -8975778939793530631L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected long id;

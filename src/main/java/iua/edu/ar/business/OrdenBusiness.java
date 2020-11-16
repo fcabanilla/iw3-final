@@ -98,4 +98,22 @@ public class OrdenBusiness implements IOrdenBusiness {
 
 	}
 
+	@Override
+	public List<Orden> listOrdenConciliacion(Orden orden) throws BusinessException, NotFoundException {
+		Orden ordenDB = load(orden.getId());
+
+		try {
+			if (ordenDB.getEstado() == 4) {
+				return ordenDAO.findAll();
+			} else {
+				throw new BusinessException(
+						"El estado no se encuentra en estado 4, no se puede mostrar conciliacion de orden");
+			}
+
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+
+	}
+
 }

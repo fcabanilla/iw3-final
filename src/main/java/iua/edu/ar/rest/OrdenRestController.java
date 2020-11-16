@@ -46,7 +46,7 @@ public class OrdenRestController {
 	}
 
 	@GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Orden>> list() {
+	public ResponseEntity<List<Orden>> listOr() {
 		try {
 			log.debug("GetMapping: Una lista de orden ");
 			return new ResponseEntity<List<Orden>>(ordenBusiness.list(), HttpStatus.OK);
@@ -96,11 +96,10 @@ public class OrdenRestController {
 		} catch (BusinessException e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (NotFoundException e) {
-			// TODO Auto-generated catch block
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	@PostMapping(value = "/cierre-orden", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> cierreOrden(@RequestBody Orden orden) throws NotFoundException {
 		try {
@@ -114,5 +113,15 @@ public class OrdenRestController {
 		}
 	}
 
+	@GetMapping(value = "/conciliacion-orden", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Orden>> listCon(Orden orden) throws NotFoundException{
+		try {
+			log.debug("GetMapping: Una lista de conciliacion-orden ");
+			return new ResponseEntity<List<Orden>>(ordenBusiness.listOrdenConciliacion(orden), HttpStatus.OK);
 
+		} catch (BusinessException e) {
+			return new ResponseEntity<List<Orden>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
 }
