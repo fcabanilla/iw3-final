@@ -1,13 +1,18 @@
 package iua.edu.ar.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "datos_carga")
@@ -19,24 +24,26 @@ public class DatosCarga implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	@Column(length = 100)
 	private long masaAcumulada;
-	
+
 	@Column(length = 100)
 	private long densidadProducto;
-	
+
 	@Column(length = 100)
 	private long temperaturaProducto;
-	
+
 	@Column(length = 100)
 	private long caudal;
+
+	@OneToMany(targetEntity = OrdenDetalle.class, mappedBy = "datosCarga", fetch = FetchType.LAZY)
+	@JsonBackReference
+	private List<OrdenDetalle> ordenDetalleList;
 	
-	
-	
-/*
- * 	GETTERS AND SETTERS
- * */
+	/*
+	 * GETTERS AND SETTERS
+	 */
 	public long getId() {
 		return id;
 	}
@@ -76,7 +83,5 @@ public class DatosCarga implements Serializable {
 	public void setCaudal(long caudal) {
 		this.caudal = caudal;
 	}
-	
-	
-	
+
 }
