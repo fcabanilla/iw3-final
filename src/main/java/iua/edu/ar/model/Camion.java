@@ -36,6 +36,8 @@ public class Camion implements Serializable {
 	@OneToMany(targetEntity = Orden.class, mappedBy = "camion", fetch = FetchType.LAZY)
 	@JsonBackReference
 	private List<Orden> ordenList;
+	
+	
 
 	public long getId() {
 		return id;

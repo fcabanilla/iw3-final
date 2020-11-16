@@ -27,7 +27,7 @@ public class OrdenBusiness implements IOrdenBusiness {
 			throw new BusinessException(e);
 		}
 		if (!op.isPresent()) {
-			throw new NotFoundException("El Producto con el id " + id + " no se encuentra en la BD");
+			throw new NotFoundException("La orden con id " + id + " no se encuentra en la BD");
 		}
 		return op.get();
 	}
@@ -64,7 +64,17 @@ public class OrdenBusiness implements IOrdenBusiness {
 
 	@Override
 	public Orden update(Orden orden) throws NotFoundException, BusinessException {
-		load(orden.getId());
+		Orden ordenDB = load(orden.getId());
+
+		ordenDAO.save(ordenDB);
+
+		// ordenDB.setUltimosDatosCarga(ultimosDatosCarga);
+
+		orden.partialUpdate(ordenDB);
+
+		if (orden.checkBasicData())
+			orden.setEstado(1);
+
 		return ordenDAO.save(orden);
 
 	}
@@ -82,6 +92,20 @@ public class OrdenBusiness implements IOrdenBusiness {
 			throw new NotFoundException("La orden con código externo " + codigoExterno + " no se encuentra en la BD");
 		}
 		return op.get();
+	}
+
+	@Override
+	public Void cierreOrden(Orden orden) throws BusinessException, NotFoundException {
+		Orden ordenDB = load(orden.getId());
+
+		if (ordenDB.getEstado() == 2) {
+			ordenDB.setEstado(3);
+			ordenDAO.save(ordenDB);
+			return null;
+		}
+
+		throw new BusinessException("El estado no se encuentra en estado 2, no se cambiara el valor");
+
 	}
 
 }

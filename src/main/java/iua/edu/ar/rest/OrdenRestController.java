@@ -26,7 +26,7 @@ import iua.edu.ar.model.Orden;
 @RestController
 @RequestMapping(value = Constantes.URL_ORDENES)
 public class OrdenRestController {
-	
+
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -100,4 +100,19 @@ public class OrdenRestController {
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@PostMapping(value = "/cierreOrden", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> cierreOrden(@RequestBody Orden orden) throws NotFoundException {
+		try {
+			ordenBusiness.cierreOrden(orden);
+			HttpHeaders responseHeaders = new HttpHeaders();
+			responseHeaders.set("location", Constantes.URL_ORDENES + '/' + orden.getId());
+			return new ResponseEntity<String>(responseHeaders, HttpStatus.CREATED);
+		} catch (BusinessException e) {
+
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+
 }

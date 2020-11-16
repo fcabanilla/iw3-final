@@ -11,7 +11,7 @@ public final class Constantes {
 	public static final String URL_CHOFERES = URL_BASE + "/choferes";
 	public static final String URL_ORDENES = URL_BASE + "/ordenes";
 	public static final String URL_CLIENTES = URL_BASE + "/clientes";
-	public static final String URL_SISTEMA_EXTERNO = URL_BASE + "/sistema-externo";
+
 
 
 

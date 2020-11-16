@@ -19,6 +19,9 @@ public interface IOrdenBusiness {
 	public void delete(Long id) throws NotFoundException, BusinessException;
 
 	// Extras
+
+	public Void cierreOrden(Orden orden) throws BusinessException, NotFoundException;
+
 	// Sin uso actualmente
 	public Orden load(String codigoExterno) throws NotFoundException, BusinessException;
 
