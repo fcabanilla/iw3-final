@@ -8,5 +8,5 @@ import iua.edu.ar.model.Orden;
 
 public interface OrdenRepository extends JpaRepository<Orden, Long> {
 
-	public Optional<Orden> findFirstByCodigoExterno(String codigoExterno);
+	//public Optional<Orden> findFirstByCodigoExterno(String codigoExterno);
 }
