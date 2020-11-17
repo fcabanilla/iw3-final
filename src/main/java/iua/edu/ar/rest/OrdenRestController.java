@@ -22,6 +22,7 @@ import iua.edu.ar.business.IOrdenBusiness;
 import iua.edu.ar.business.exception.BusinessException;
 import iua.edu.ar.business.exception.NotFoundException;
 import iua.edu.ar.model.Orden;
+import iua.edu.ar.model.dto.OrdenDTO;
 
 @RestController
 @RequestMapping(value = Constantes.URL_ORDENES)
@@ -145,13 +146,13 @@ public class OrdenRestController {
 	}
 
 	@GetMapping(value = "/conciliacion-orden", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Orden>> listCon(Orden orden) throws NotFoundException{
+	public ResponseEntity<List<OrdenDTO>> listCon(OrdenDTO ordenDTO ) throws NotFoundException{
 		try {
 			log.debug("GetMapping: Una lista de conciliacion-orden ");
-			return new ResponseEntity<List<Orden>>(ordenBusiness.listOrdenConciliacion(orden), HttpStatus.OK);
+			return new ResponseEntity<List<OrdenDTO>>(ordenBusiness.findByOrdenConciliacion(ordenDTO), HttpStatus.OK);
 
 		} catch (BusinessException e) {
-			return new ResponseEntity<List<Orden>>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<List<OrdenDTO>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 import iua.edu.ar.business.exception.BusinessException;
 import iua.edu.ar.business.exception.NotFoundException;
 import iua.edu.ar.model.Orden;
+import iua.edu.ar.model.dto.OrdenDTO;
 
 public interface IOrdenBusiness {
 
@@ -29,4 +30,7 @@ public interface IOrdenBusiness {
 	public void addPesajeInicial(Orden orden) throws NotFoundException, BusinessException;
 
 	public void addPesajeFinal(Orden orden) throws NotFoundException, BusinessException;
+	
+	public List<OrdenDTO> findByOrdenConciliacion(OrdenDTO ordenDTO) throws BusinessException;
+
 }

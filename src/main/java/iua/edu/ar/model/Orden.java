@@ -2,23 +2,25 @@ package iua.edu.ar.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
+import javax.persistence.*;
 
-import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import iua.edu.ar.model.dto.OrdenDTO;
 
 @Entity
 @Table(name = "ordenes")
+
+@NamedNativeQuery(name = "Orden.findByOrdenConciliacion", query = "", resultSetMapping = "ordenMap")
+
+@SqlResultSetMapping(name = "ordenMap", classes = {
+		@ConstructorResult(columns = { 
+				@ColumnResult(name = "Peso_inicial", type = Double.class),
+				@ColumnResult(name = "Peso_final", type = Double.class),
+				@ColumnResult(name = "Masa_acumulada", type = long.class),
+				@ColumnResult(name = "Promedio_temperatura", type = Double.class),
+				@ColumnResult(name = "Promedio_densidad", type = Double.class),
+				@ColumnResult(name = "Promedio_caudal", type = Double.class) }, targetClass = OrdenDTO.class) })
 public class Orden implements Serializable {
 
 	private static final long serialVersionUID = -4828422833183668198L;
@@ -119,7 +121,6 @@ public class Orden implements Serializable {
 
 		if (this.getProducto() == null)
 			this.setProducto(ordenDB.getProducto());
-
 	}
 
 	public boolean checkBasicData() {
