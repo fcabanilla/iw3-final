@@ -25,7 +25,11 @@ public class OrdenBusiness implements IOrdenBusiness {
 
 	@Autowired
 	private OrdenRepository ordenDAO;
+	@Autowired
 	private OrdenDetalleRepository ordenDetalleDAO;
+	
+	@Autowired
+	OrdenDetalleBusiness ordenDetalleBusiness;
 
 
 	@Override
@@ -93,21 +97,6 @@ public class OrdenBusiness implements IOrdenBusiness {
 	}
 
 	@Override
-	// Sin uso actualmente
-	public Orden load(String codigoExterno) throws NotFoundException, BusinessException {
-		Optional<Orden> op;
-		try {
-			op = ordenDAO.findFirstByCodigoExterno(codigoExterno);
-		} catch (Exception e) {
-			throw new BusinessException(e);
-		}
-		if (!op.isPresent()) {
-			throw new NotFoundException("La orden con código externo " + codigoExterno + " no se encuentra en la BD");
-		}
-		return op.get();
-	}
-
-	@Override
 	public void checkPassword(Orden orden) throws NotFoundException, BusinessException, PasswordException {
 		Orden ordenDB = load(orden.getId());
 		if (orden.checkPassword(ordenDB.getPassword()) && ordenDB.getEstado() == 2) {
@@ -117,48 +106,51 @@ public class OrdenBusiness implements IOrdenBusiness {
 		throw new PasswordException("La contrasenia no es correcta");
 	}
 
+	
+	
+	
+	
 	@Override
 	public void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException {
-		Orden ordenDB = load(id);
-
-		UltimoDatoCarga ultimosDatosCarga = new UltimoDatoCarga(
-				datosCarga.getMasaAcumulada(),
-				datosCarga.getDensidadProducto(), 
-				datosCarga.getTemperaturaProducto(), 
-				datosCarga.getCaudal()
-		);
-		
-		ordenDB.setUltimosDatosCarga(ultimosDatosCarga);
-		ordenDAO.save(ordenDB);
-
-		
+		Orden ordenDB;
 		try {
-			Optional<OrdenDetalle> lista = ordenDetalleDAO.findById((long) 1);
-			System.out.print(lista);
+			ordenDB = load(id);
+
+			UltimoDatoCarga ultimosDatosCarga = new UltimoDatoCarga(
+					datosCarga.getMasaAcumulada(),
+					datosCarga.getDensidadProducto(), 
+					datosCarga.getTemperaturaProducto(), 
+					datosCarga.getCaudal()
+			);
+			ordenDB.setUltimosDatosCarga(ultimosDatosCarga);
+			add(ordenDB);
+			
+			OrdenDetalle ordenDetalle = new OrdenDetalle();
+			
+			List<OrdenDetalle> test = ordenDetalleDAO.findAllOrdenDetalleByOrdenId(id);
+			
+			if (test.isEmpty()) {
+				
+				ordenDetalle.setCaudal(datosCarga.getCaudal());
+				ordenDetalle.setDensidadProducto(datosCarga.getDensidadProducto());
+				ordenDetalle.setMasaAcumulada(datosCarga.getMasaAcumulada());
+				ordenDetalle.setOrden(ordenDB);
+				ordenDetalle.setTemperaturaProducto(datosCarga.getTemperaturaProducto());
+
+				
+				ordenDetalleDAO.save(ordenDetalle);
+			}
 		} catch (Exception e) {
-			System.out.print(e);
 			throw new BusinessException(e);
 		}
 		
 		
-		Orden ordenTmp = new Orden();
-		ordenTmp.setId(id);
-		List<OrdenDetalle> test = ordenDetalleDAO.findAllOrdenDetalleByOrden(ordenTmp);
+		OrdenDetalle test2 = ordenDetalleDAO.findFirstByOrdenIdOrderByFecha(id);
+
+//		Date date1 = ordenDetalleDAO.findFirstByOrdenIdOrderByFecha(id);
 		
-//		if (ordenDetalleDAO.findByOrdenId(id).isEmpty()) {
-//			OrdenDetalle ordenDetalle = new OrdenDetalle(
-//					datosCarga.getMasaAcumulada(),
-//					datosCarga.getDensidadProducto(), 
-//					datosCarga.getTemperaturaProducto(), 
-//					datosCarga.getCaudal()
-//			);
-//			ordenDetalleDAO.save(ordenDetalle);
-//		}
+		Date date2 = new Date();
 		
-//		Date date1 = ordenDetalleDAO.findByOrdenIdOrderByFecha(id).get(0).getFecha();
-//		
-//		Date date2 = new Date();
-//		
 //		long dias = getDateDiff(date1, date2, TimeUnit.DAYS);
 		
 		
@@ -180,5 +172,6 @@ public class OrdenBusiness implements IOrdenBusiness {
 	    long diffInMillies = date2.getTime() - date1.getTime();
 	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 	}
+
 
 }

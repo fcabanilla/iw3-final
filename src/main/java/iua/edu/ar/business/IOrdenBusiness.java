@@ -22,8 +22,6 @@ public interface IOrdenBusiness {
 
 	// Extras
 	// Sin uso actualmente
-	public Orden load(String codigoExterno) throws NotFoundException, BusinessException;
-
 	public void checkPassword(Orden orden) throws NotFoundException, BusinessException, PasswordException;
 
 	public void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException;
