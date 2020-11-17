@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -40,7 +39,7 @@ public class OrdenDetalle implements Serializable {
 
 //	@ManyToOne(cascade = CascadeType.ALL)
 //	@JoinColumn(name = "id_orden")
-	@ManyToOne(cascade = {CascadeType.ALL},fetch= FetchType.EAGER)
+	@ManyToOne(cascade = {CascadeType.MERGE},fetch= FetchType.EAGER)
 	private Orden orden;
 
 	public long getId() {
