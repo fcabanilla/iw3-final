@@ -74,10 +74,10 @@ public class OrdenDetalleBusiness implements IOrdenDetalleBusiness {
 		
 	}
 
-	/*
+	
 	@Override
 	public void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException {
-		Orden ordenDB = load(id);
+		Orden ordenDB = ordenBusiness.load(id);
 
 		UltimoDatoCarga ultimosDatosCarga = new UltimoDatoCarga(
 				datosCarga.getMasaAcumulada(),
@@ -86,19 +86,17 @@ public class OrdenDetalleBusiness implements IOrdenDetalleBusiness {
 				datosCarga.getCaudal()
 		);
 		
-		ordenDB.setUltimosDatosCarga(ultimosDatosCarga);
-		ordenDAO.save(ordenDB);
+		ordenDB.setUltimosDatosCarga(ultimosDatosCarga);		
 		
-		
-		Orden ordenTmp = new Orden();
-		ordenTmp.setId(id);
+		Orden ordenOrdenDetalle = new Orden();
+		ordenOrdenDetalle.setId(id);
 //		ordenTmp.setId(id);
 		
 		List<OrdenDetalle> test = ordenDetalleDAO.findAllOrdenDetalleByOrdenId(id);
 		
 		if (test.isEmpty()) {
 			OrdenDetalle ordenDetalle = new OrdenDetalle(
-					ordenTmp,
+					ordenOrdenDetalle,
 					datosCarga.getDensidadProducto(),
 					datosCarga.getTemperaturaProducto(),
 					datosCarga.getCaudal(),
@@ -124,7 +122,6 @@ public class OrdenDetalleBusiness implements IOrdenDetalleBusiness {
 		return;
 
 	}
-	*/
 
 
 

@@ -21,6 +21,8 @@ public interface IOrdenDetalleBusiness {
 
 	public void delete(Long id) throws NotFoundException, BusinessException;
 
+	void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException;
+
 //	void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException;
 
 	// Extras

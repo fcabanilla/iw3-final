@@ -112,9 +112,14 @@ public class OrdenBusiness implements IOrdenBusiness {
 	
 	@Override
 	public void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException {
+		
+//		ordenDetalleBusiness.cargaDatos(datosCarga, id);
+		
 		Orden ordenDB;
 		try {
 			ordenDB = load(id);
+			if(ordenDB.getEstado() != 2)
+				throw new BusinessException("Estado incorrecto");
 
 			UltimoDatoCarga ultimosDatosCarga = new UltimoDatoCarga(
 					datosCarga.getMasaAcumulada(),
@@ -127,31 +132,33 @@ public class OrdenBusiness implements IOrdenBusiness {
 			
 			OrdenDetalle ordenDetalle = new OrdenDetalle();
 			
-			List<OrdenDetalle> test = ordenDetalleDAO.findAllOrdenDetalleByOrdenId(id);
+			List<OrdenDetalle> test = ordenDetalleDAO.findByOrdenId(id);
+			ordenDetalle.setCaudal(datosCarga.getCaudal());
+			ordenDetalle.setDensidadProducto(datosCarga.getDensidadProducto());
+			ordenDetalle.setMasaAcumulada(datosCarga.getMasaAcumulada());
+			ordenDetalle.setOrden(ordenDB);
+			ordenDetalle.setTemperaturaProducto(datosCarga.getTemperaturaProducto());
+			if (test.isEmpty()) 
+				ordenDetalleDAO.save(ordenDetalle);
 			
-			if (test.isEmpty()) {
-				
-				ordenDetalle.setCaudal(datosCarga.getCaudal());
-				ordenDetalle.setDensidadProducto(datosCarga.getDensidadProducto());
-				ordenDetalle.setMasaAcumulada(datosCarga.getMasaAcumulada());
-				ordenDetalle.setOrden(ordenDB);
-				ordenDetalle.setTemperaturaProducto(datosCarga.getTemperaturaProducto());
+			OrdenDetalle test2 = ordenDetalleDAO.findFirstByOrdenIdOrderByFecha(id);
+			
 
-				
+			Date date1 = test2.getFecha();
+			
+			Date date2 = new Date();
+			
+			long segundos = getDateDiff(date1, date2, TimeUnit.SECONDS);
+			if (segundos >= ordenDB.getFecuencia()) {
 				ordenDetalleDAO.save(ordenDetalle);
 			}
+			
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
 		
 		
-		OrdenDetalle test2 = ordenDetalleDAO.findFirstByOrdenIdOrderByFecha(id);
-
-//		Date date1 = ordenDetalleDAO.findFirstByOrdenIdOrderByFecha(id);
 		
-		Date date2 = new Date();
-		
-//		long dias = getDateDiff(date1, date2, TimeUnit.DAYS);
 		
 		
 

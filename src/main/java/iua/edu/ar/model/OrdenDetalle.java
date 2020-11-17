@@ -38,7 +38,7 @@ public class OrdenDetalle implements Serializable {
 
 	private static final long serialVersionUID = 1463037298087273309L;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "orden_id")
 	private Orden orden;
 
