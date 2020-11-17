@@ -11,15 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 
-import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
-@DynamicUpdate
-@Table(name = "ordenes")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
 public class Orden implements Serializable {
 
 	private static final long serialVersionUID = -4828422833183668198L;
@@ -27,6 +27,10 @@ public class Orden implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+	
+	/*
+	 * 							FECHAS DE LA ORDEN
+	 * */
 
 	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
@@ -52,6 +56,10 @@ public class Orden implements Serializable {
 //	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 //	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 //	private Date fechaUltimoOrdenDetalle;
+	
+	/*
+	 * 							OTRAS ENTIDADES DE LA ORDEN
+	 * */
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cliente_id")
@@ -68,25 +76,26 @@ public class Orden implements Serializable {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "chofer_id")
 	private Chofer chofer;
+	
+	
+	/*
+	 * 							OTROS DATOS DELA ORDEN
+	 * */
 
 	@Column(length = 100)
 	private int estado = 0;
 
 	@OneToOne(cascade =  CascadeType.ALL)
-	private UltimoDatoCarga ultimosDatosCarga;
+	private DatoCarga ultimosDatosCarga;
 
 	@OneToOne(cascade =  CascadeType.ALL)
-	private PromedioDatoCarga promedioDatosCarga;
+	private DatoCarga promedioDatosCarga;
 
 	@Column(length = 100, nullable = true)
 	private String password;
 
 	@Column(length = 100, nullable = true)
 	private int fecuencia;
-
-	/*
-	 * Cambiar el modelado del preset
-	 */
 
 	@Column(length = 100, nullable = true)
 	private int preset;
@@ -96,6 +105,8 @@ public class Orden implements Serializable {
 	
 	@Column(length = 100, nullable = true)
 	private Double pesoInicial;
+
+	
 
 	public void partialUpdate(Orden ordenDB) {
 		if(this.getCamion() == null) 
@@ -154,7 +165,7 @@ public class Orden implements Serializable {
 	
 	// Getters and setters
 	
-
+	
 	public long getId() {
 		return id;
 	}
@@ -235,19 +246,19 @@ public class Orden implements Serializable {
 		this.estado = estado;
 	}
 
-	public UltimoDatoCarga getUltimosDatosCarga() {
+	public DatoCarga getUltimosDatosCarga() {
 		return ultimosDatosCarga;
 	}
 
-	public void setUltimosDatosCarga(UltimoDatoCarga ultimosDatosCarga) {
+	public void setUltimosDatosCarga(DatoCarga ultimosDatosCarga) {
 		this.ultimosDatosCarga = ultimosDatosCarga;
 	}
 
-	public PromedioDatoCarga getPromedioDatosCarga() {
+	public DatoCarga getPromedioDatosCarga() {
 		return promedioDatosCarga;
 	}
 
-	public void setPromedioDatosCarga(PromedioDatoCarga promedioDatosCarga) {
+	public void setPromedioDatosCarga(DatoCarga promedioDatosCarga) {
 		this.promedioDatosCarga = promedioDatosCarga;
 	}
 
@@ -290,19 +301,6 @@ public class Orden implements Serializable {
 	public void setPesoInicial(Double pesoInicial) {
 		this.pesoInicial = pesoInicial;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
 	
 	
 	

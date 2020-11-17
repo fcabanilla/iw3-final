@@ -6,18 +6,12 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.origin.SystemEnvironmentOrigin;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import iua.edu.ar.business.exception.BusinessException;
 import iua.edu.ar.business.exception.NotFoundException;
-import iua.edu.ar.business.exception.PasswordException;
-import iua.edu.ar.model.DatoCarga;
 import iua.edu.ar.model.Orden;
-import iua.edu.ar.model.OrdenDetalle;
-import iua.edu.ar.model.UltimoDatoCarga;
-import iua.edu.ar.model.persistence.OrdenDetalleRepository;
 import iua.edu.ar.model.persistence.OrdenRepository;
 
 @Service
@@ -25,8 +19,6 @@ public class OrdenBusiness implements IOrdenBusiness {
 
 	@Autowired
 	private OrdenRepository ordenDAO;
-	@Autowired
-	private OrdenDetalleRepository ordenDetalleDAO;
 	
 	@Autowired
 	OrdenDetalleBusiness ordenDetalleBusiness;
@@ -58,8 +50,8 @@ public class OrdenBusiness implements IOrdenBusiness {
 	@Override
 	public Orden add(Orden orden) throws BusinessException {
 		try {
-			if (orden.checkBasicData())
-				orden.setEstado(1);
+//			if (orden.checkBasicData())
+//				orden.setEstado(1);
 
 			return ordenDAO.save(orden);
 		} catch (Exception e) {
@@ -96,70 +88,70 @@ public class OrdenBusiness implements IOrdenBusiness {
 
 	}
 
-	@Override
-	public void checkPassword(Orden orden) throws NotFoundException, BusinessException, PasswordException {
-		Orden ordenDB = load(orden.getId());
-		if (orden.checkPassword(ordenDB.getPassword()) && ordenDB.getEstado() == 2) {
-			return;
-		}
-
-		throw new PasswordException("La contrasenia no es correcta");
-	}
+//	@Override
+//	public void checkPassword(Orden orden) throws NotFoundException, BusinessException, PasswordException {
+//		Orden ordenDB = load(orden.getId());
+//		if (orden.checkPassword(ordenDB.getPassword()) && ordenDB.getEstado() == 2) {
+//			return;
+//		}
+//
+//		throw new PasswordException("La contrasenia no es correcta");
+//	}
 
 	
 	
 	
 	
-	@Override
-	public void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException {
-		Orden ordenDB;
-		try {
-			ordenDB = load(id);
-
-			UltimoDatoCarga ultimosDatosCarga = new UltimoDatoCarga(
-					datosCarga.getMasaAcumulada(),
-					datosCarga.getDensidadProducto(), 
-					datosCarga.getTemperaturaProducto(), 
-					datosCarga.getCaudal()
-			);
-			ordenDB.setUltimosDatosCarga(ultimosDatosCarga);
-			add(ordenDB);
-			
-			OrdenDetalle ordenDetalle = new OrdenDetalle();
-			
-			List<OrdenDetalle> test = ordenDetalleDAO.findAllOrdenDetalleByOrdenId(id);
-			
-			if (test.isEmpty()) {
-				
-				ordenDetalle.setCaudal(datosCarga.getCaudal());
-				ordenDetalle.setDensidadProducto(datosCarga.getDensidadProducto());
-				ordenDetalle.setMasaAcumulada(datosCarga.getMasaAcumulada());
-				ordenDetalle.setOrden(ordenDB);
-				ordenDetalle.setTemperaturaProducto(datosCarga.getTemperaturaProducto());
-
-				
-				ordenDetalleDAO.save(ordenDetalle);
-			}
-		} catch (Exception e) {
-			throw new BusinessException(e);
-		}
-		
-		
-		OrdenDetalle test2 = ordenDetalleDAO.findFirstByOrdenIdOrderByFecha(id);
-
-//		Date date1 = ordenDetalleDAO.findFirstByOrdenIdOrderByFecha(id);
-		
-		Date date2 = new Date();
-		
-//		long dias = getDateDiff(date1, date2, TimeUnit.DAYS);
-		
-		
-
-//		ordenDB.setUltimosDatosCarga(datosCarga);
-//		ordenDB.setPromedioDatosCarga(datosCarga);
-		return;
-
-	}
+//	@Override
+//	public void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException {
+//		Orden ordenDB;
+//		try {
+//			ordenDB = load(id);
+//
+//			UltimoDatoCarga ultimosDatosCarga = new UltimoDatoCarga(
+//					datosCarga.getMasaAcumulada(),
+//					datosCarga.getDensidadProducto(), 
+//					datosCarga.getTemperaturaProducto(), 
+//					datosCarga.getCaudal()
+//			);
+//			ordenDB.setUltimosDatosCarga(ultimosDatosCarga);
+//			add(ordenDB);
+//			
+//			OrdenDetalle ordenDetalle = new OrdenDetalle();
+//			
+//			List<OrdenDetalle> test = ordenDetalleDAO.findAllOrdenDetalleByOrdenId(id);
+//			
+//			if (test.isEmpty()) {
+//				
+//				ordenDetalle.setCaudal(datosCarga.getCaudal());
+//				ordenDetalle.setDensidadProducto(datosCarga.getDensidadProducto());
+//				ordenDetalle.setMasaAcumulada(datosCarga.getMasaAcumulada());
+//				ordenDetalle.setOrden(ordenDB);
+//				ordenDetalle.setTemperaturaProducto(datosCarga.getTemperaturaProducto());
+//
+//				
+//				ordenDetalleDAO.save(ordenDetalle);
+//			}
+//		} catch (Exception e) {
+//			throw new BusinessException(e);
+//		}
+//		
+//		
+//		OrdenDetalle test2 = ordenDetalleDAO.findFirstByOrdenIdOrderByFecha(id);
+//
+////		Date date1 = ordenDetalleDAO.findFirstByOrdenIdOrderByFecha(id);
+//		
+//		Date date2 = new Date();
+//		
+////		long dias = getDateDiff(date1, date2, TimeUnit.DAYS);
+//		
+//		
+//
+////		ordenDB.setUltimosDatosCarga(datosCarga);
+////		ordenDB.setPromedioDatosCarga(datosCarga);
+//		return;
+//
+//	}
 	
 	/**
 	 * Get a diff between two dates

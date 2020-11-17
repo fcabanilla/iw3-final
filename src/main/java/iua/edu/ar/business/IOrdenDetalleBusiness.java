@@ -4,9 +4,6 @@ import java.util.List;
 
 import iua.edu.ar.business.exception.BusinessException;
 import iua.edu.ar.business.exception.NotFoundException;
-import iua.edu.ar.business.exception.PasswordException;
-import iua.edu.ar.model.DatoCarga;
-import iua.edu.ar.model.Orden;
 import iua.edu.ar.model.OrdenDetalle;
 
 public interface IOrdenDetalleBusiness {
@@ -15,7 +12,7 @@ public interface IOrdenDetalleBusiness {
 
 	public List<OrdenDetalle> list() throws BusinessException;
 
-	public OrdenDetalle add(OrdenDetalle ordenDetalle) throws BusinessException;
+	public OrdenDetalle add(OrdenDetalle ordenDetalle, Long ordenId) throws BusinessException;
 
 	public OrdenDetalle update(OrdenDetalle ordenDetalle) throws NotFoundException, BusinessException;
 

@@ -18,13 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import iua.edu.ar.business.IOrdenBusiness;
 import iua.edu.ar.business.IOrdenDetalleBusiness;
 import iua.edu.ar.business.exception.BusinessException;
 import iua.edu.ar.business.exception.NotFoundException;
-import iua.edu.ar.business.exception.PasswordException;
-import iua.edu.ar.model.DatoCarga;
-import iua.edu.ar.model.Orden;
 import iua.edu.ar.model.OrdenDetalle;
 
 @RestController
@@ -62,10 +58,10 @@ public class OrdenDetalleRestController {
 
 	}
 
-	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> add(@RequestBody OrdenDetalle ordenDetalle) {
+	@PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> add(@RequestBody OrdenDetalle ordenDetalle, @PathVariable("id") Long ordenId) {
 		try {
-			ordenDetalleBusiness.add(ordenDetalle);
+			ordenDetalleBusiness.add(ordenDetalle, ordenId);
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.set("location", Constantes.URL_ORDENES + '/' + ordenDetalle.getId());
 			return new ResponseEntity<String>(responseHeaders, HttpStatus.CREATED);

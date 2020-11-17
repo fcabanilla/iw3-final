@@ -6,65 +6,43 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
-@Table(name = "orden_detalle")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
+
 public class OrdenDetalle implements Serializable {
-
 	
-	public OrdenDetalle() {
-		
-	}
-	
+	private static final long serialVersionUID = 4551249436451185765L;
 
-	public OrdenDetalle(Orden orden, 
-						long masaAcumulada, 
-						long densidadProducto,
-						long temperaturaProducto, 
-						long caudal) {
-		super();
-		this.orden = orden;
-		this.masaAcumulada = masaAcumulada;
-		this.densidadProducto = densidadProducto;
-		this.temperaturaProducto = temperaturaProducto;
-		this.caudal = caudal;
-	}
-
-	private static final long serialVersionUID = 1463037298087273309L;
-
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "orden_id")
-	private Orden orden;
-
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected long id;
-	
-	@Column(name ="fecha", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = true)
-	protected Date fecha;
+	private long id;
 
-	@Column(length = 100)
-	protected long masaAcumulada;
+	@Column()
+	private double masaAcumulada;
+	@Column()
+	private double densidad;
+	@Column()
+	private double temperatura;
+	@Column()
+	private double caudal;
+	@Column()
+	private Date fechaHoraMedicion;
 
-	@Column(length = 100)
-	protected long densidadProducto;
+//	@ManyToOne(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "id_orden")
+	@ManyToOne(cascade = {CascadeType.ALL},fetch= FetchType.EAGER)
+	private Orden orden;
 
-	@Column(length = 100)
-	protected long temperaturaProducto;
-
-	@Column(length = 100)
-	protected long caudal;
-
-	/*
-	 * GETTERS AND SETTERS
-	 */
 	public long getId() {
 		return id;
 	}
@@ -73,53 +51,99 @@ public class OrdenDetalle implements Serializable {
 		this.id = id;
 	}
 
-	public long getMasaAcumulada() {
+	public double getMasaAcumulada() {
 		return masaAcumulada;
 	}
 
-	public void setMasaAcumulada(long masaAcumulada) {
+	public void setMasaAcumulada(double masaAcumulada) {
 		this.masaAcumulada = masaAcumulada;
 	}
 
-	public long getDensidadProducto() {
-		return densidadProducto;
+	public double getDensidad() {
+		return densidad;
 	}
 
-	public void setDensidadProducto(long densidadProducto) {
-		this.densidadProducto = densidadProducto;
+	public void setDensidad(double densidad) {
+		this.densidad = densidad;
 	}
 
-	public long getTemperaturaProducto() {
-		return temperaturaProducto;
+	public double getTemperatura() {
+		return temperatura;
 	}
 
-	public void setTemperaturaProducto(long temperaturaProducto) {
-		this.temperaturaProducto = temperaturaProducto;
+	public void setTemperatura(double temperatura) {
+		this.temperatura = temperatura;
 	}
 
-	public Date getFecha() {
-		return fecha;
-	}
-
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
-	}
-
-	public long getCaudal() {
+	public double getCaudal() {
 		return caudal;
 	}
 
-	public void setCaudal(long caudal) {
+	public void setCaudal(double caudal) {
 		this.caudal = caudal;
 	}
+
+	public Date getFechaHoraMedicion() {
+		return fechaHoraMedicion;
+	}
+
+	public void setFechaHoraMedicion(Date fechaHoraMedicion) {
+		this.fechaHoraMedicion = fechaHoraMedicion;
+	}
+
 	public Orden getOrden() {
 		return orden;
 	}
+
 	public void setOrden(Orden orden) {
 		this.orden = orden;
 	}
-	
 
+	public OrdenDetalle() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public OrdenDetalle(long id, double masaAcumulada, double densidad, double temperatura, double caudal,
+			Date fechaHoraMedicion, Orden orden) {
+		super();
+		this.masaAcumulada = masaAcumulada;
+		this.densidad = densidad;
+		this.temperatura = temperatura;
+		this.caudal = caudal;
+		this.fechaHoraMedicion = fechaHoraMedicion;
+		this.orden = orden;
+	}
+
+	public String checkBasicData(Orden orden) {
+		if (orden.getEstado() == 3)
+			return "El camion esta cargado";
+		if (orden.getEstado() != 2)
+			return "Para comenzar a cargar el camion, la orden debe estar en estado 2";
+		if (getCaudal() == 0)
+			return "El atributo caudal es obligatorio";
+		if (getCaudal() < 0)
+			return "El caudal debe ser > 0";
+		if (getCaudal() < 3000 || getCaudal() > 5000)
+			return "El caudal debe estar entre 3000 y 5000 kg/h";
+		if (getMasaAcumulada() == 0)
+			return "El atributo masa acumulada es obligatorio";
+//		if (getMasaAcumulada() < orden.getUltimaMasaAcumulada())
+//			return "La masa acumulada debe ser creciente";
+		if (getDensidad() == 0)
+			return "El atributo densidad es obligatorio";
+		if (getDensidad() < 0 || getDensidad() > 1)
+			return "La densidad debe ser entre 0 y 1";
+		if (getTemperatura() == 0)
+			return "El atributo temperatura es obligatorio";
+		if (getTemperatura() < 0 || getTemperatura() > 40)
+			return "La temperatura debe ser mayor a 0 y menor que 40 grados.";
+		if (orden.getPreset() <= getMasaAcumulada())
+			return "Camion cargado";
+		return "Cargando camion";
+
+	}
+	
 	
 	
 }
