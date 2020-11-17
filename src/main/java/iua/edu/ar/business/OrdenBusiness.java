@@ -96,8 +96,10 @@ public class OrdenBusiness implements IOrdenBusiness {
 
 	}
 
+	
+
 	@Override
-	public void checkPassword(Orden orden) throws NotFoundException, BusinessException, PasswordException {
+public void checkPassword(Orden orden) throws NotFoundException, BusinessException, PasswordException {
 		Orden ordenDB = load(orden.getId());
 		if (orden.checkPassword(ordenDB.getPassword()) && ordenDB.getEstado() == 2) {
 			return;
@@ -112,9 +114,6 @@ public class OrdenBusiness implements IOrdenBusiness {
 	
 	@Override
 	public void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException {
-		
-//		ordenDetalleBusiness.cargaDatos(datosCarga, id);
-		
 		Orden ordenDB;
 		try {
 			ordenDB = load(id);
@@ -156,14 +155,7 @@ public class OrdenBusiness implements IOrdenBusiness {
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
-		
-		
-		
-		
-		
 
-//		ordenDB.setUltimosDatosCarga(datosCarga);
-//		ordenDB.setPromedioDatosCarga(datosCarga);
 		return;
 
 	}
@@ -178,7 +170,52 @@ public class OrdenBusiness implements IOrdenBusiness {
 	public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
 	    long diffInMillies = date2.getTime() - date1.getTime();
 	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+
+	public void  addPesajeInicial(Orden orden) throws NotFoundException, BusinessException {
+		try {
+			Orden ordenDb= load(orden.getId());
+			if(ordenDb.getEstado()==1) {
+				
+				ordenDb.setPesoInicial(orden.getPesoInicial());
+				ordenDb.setFechaRecepcionPesajeInicial(orden.getFechaRecepcionPesajeInicial());
+				ordenDb.setEstado(2); 
+				String pass="";
+				for (int i = 0; i < 5; i++) {
+					pass=(int) (Math.random() * 9) + 1 + pass ;
+				}
+				ordenDb.setPassword( pass);
+				ordenDAO.save(ordenDb);
+			}else {
+				throw new BusinessException("El estado de la orden es distinto a 1");
+			}
+		} catch (EmptyResultDataAccessException el) {
+			throw new NotFoundException("No se encuentra la orden con id = " + orden.getId() + ".");
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+	
 	}
+	
+	@Override
+	public void  addPesajeFinal(Orden orden) throws NotFoundException, BusinessException {
+		try {
+			Orden ordenDb= load(orden.getId());
+			if(ordenDb.getEstado()==3) {
+				
+				ordenDb.setPesoFinal(orden.getPesoFinal());
+				ordenDb.setFechaRecepcionPesajeFinal(orden.getFechaRecepcionPesajeFinal());
+				ordenDb.setEstado(4);
+				ordenDAO.save(ordenDb);
+				
+			}else {
+				throw new BusinessException("El estado de la orden es distinto a 1");
+			}
+		} catch (EmptyResultDataAccessException el) {
+			throw new NotFoundException("No se encuentra la orden con id = " + orden.getId() + ".");
+		} catch (Exception e) {
+			throw new BusinessException(e);
+		}
+}
 
 
 }
