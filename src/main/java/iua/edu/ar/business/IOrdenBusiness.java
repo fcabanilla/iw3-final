@@ -4,6 +4,8 @@ import java.util.List;
 
 import iua.edu.ar.business.exception.BusinessException;
 import iua.edu.ar.business.exception.NotFoundException;
+import iua.edu.ar.business.exception.PasswordException;
+import iua.edu.ar.model.DatoCarga;
 import iua.edu.ar.model.Orden;
 
 public interface IOrdenBusiness {
@@ -19,9 +21,11 @@ public interface IOrdenBusiness {
 	public void delete(Long id) throws NotFoundException, BusinessException;
 
 	// Extras
-	// Sin uso actualmente
-	//public Orden load(String codigoExterno) throws NotFoundException, BusinessException;
+	public void checkPassword(Orden orden) throws NotFoundException, BusinessException, PasswordException;
+
+  public void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException;
 	
-	public void addPesajeInicial(Orden orden) throws NotFoundException, BusinessException;
-	public void addPesajeFinal(Orden orden) throws NotFoundException, BusinessException;
+  public void addPesajeInicial(Orden orden) throws NotFoundException, BusinessException;
+	
+  public void addPesajeFinal(Orden orden) throws NotFoundException, BusinessException;
 }

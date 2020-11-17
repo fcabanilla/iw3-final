@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import io.swagger.annotations.ApiModel;
@@ -21,6 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "Orden", description = "Planilla de carga")
 @Entity
+@DynamicUpdate
 @Table(name = "ordenes")
 public class Orden implements Serializable {
 
@@ -41,12 +43,6 @@ public class Orden implements Serializable {
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaRecepcionPesajeInicial;
-	
-	@ApiModelProperty(notes = "Fecha/Hora en el que se deberia cargar el camion", required = false)
-	@Column(length = 100, nullable = true)
-	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-	private Date fechaPrevistaCarga;
 
 	@ApiModelProperty(notes = "Fecha/Hora en la cual dejo de cargarse el camion", required = false)
 	@Column(length = 100, nullable = true)
@@ -59,7 +55,7 @@ public class Orden implements Serializable {
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaRecepcionPesajeFinal;
-	
+
 	@ApiModelProperty(notes = "Cliente que paga el servicio", required = false)
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cliente_id")
@@ -82,19 +78,23 @@ public class Orden implements Serializable {
 	
 	@ApiModelProperty(notes = "Fase del proceso de carga en la que se encuentra", required = false)
 	@Column(length = 100)
-	private int estado;
-	
-	@ApiModelProperty(notes = "Ultimo dato de carga", required = false)
+	private int estado = 0;
+  
+  @ApiModelProperty(notes = "Ultimo dato de carga", required = false)
 	@Column(length = 100, nullable = true)
-	private DatosCarga ultimosDatosCarga;
-	
-	@ApiModelProperty(notes = "Promedio de carga en un lapso de tiempo", required = false)
+	@OneToOne(cascade =  CascadeType.ALL)
+	private UltimoDatoCarga ultimosDatosCarga;
+
+  @ApiModelProperty(notes = "Promedio de carga en un lapso de tiempo", required = false)
 	@Column(length = 100, nullable = true)
-	private DatosCarga promedioDatosCarga;
+	@OneToOne(cascade =  CascadeType.ALL)
+	private PromedioDatoCarga promedioDatosCarga;
+
+
 	
 	@ApiModelProperty(notes = "Contraseña autogenerada para cada orden", required = false)
 	@Column(length = 100, nullable = true)
-	private int password;
+	private String password;
 	
 	@ApiModelProperty(notes = "Frecuencia en la que se registraran los datos de carga", required = false)
 	@Column(length = 100, nullable = true)
@@ -113,10 +113,73 @@ public class Orden implements Serializable {
 	 */
 	@ApiModelProperty(notes = "Limite a cargar en el camion", required = false)
 	@Column(length = 100, nullable = true)
-	private double preset;
-	
 
+  private int preset;
+
+	@Column(length = 50, nullable = true, unique = true)
+	private String codigoExterno;
+	
+	@Column(length = 100, nullable = true)
+	private Double pesoInicial;
+
+	public void partialUpdate(Orden ordenDB) {
+		if(this.getCamion() == null) 
+			this.setCamion(ordenDB.getCamion());
+		
+		if(this.getChofer() == null) 
+			this.setChofer(ordenDB.getChofer());
+		
+		if(this.getCliente() == null) 
+			this.setCliente(ordenDB.getCliente());
+		
+		if(this.getCodigoExterno() == null) 
+			this.setCodigoExterno(ordenDB.getCodigoExterno());
+		
+		if(this.getFechaRecepcion() == null) 
+			this.setFechaRecepcion(ordenDB.getFechaRecepcion());
+		
+		if(this.getPreset() == 0)
+			this.setPreset(ordenDB.getPreset());
+		
+		if(this.getProducto() == null)
+			this.setProducto(ordenDB.getProducto());
+		
+	}
+	
+	public Boolean checkBasicData() {
+		if(this.getCamion() == null) 
+			return false;
+		
+		if(this.getChofer() == null) 
+			return false;
+		
+		if(this.getCliente() == null) 
+			return false;
+		
+		if(this.getCodigoExterno() == null) 
+			return false;
+		
+		if(this.getFechaRecepcion() == null) 
+			return false;
+		
+		if(this.getPreset() == 0)
+			return false;
+		
+		if(this.getProducto() == null)
+			return false;
+		
+		return true;
+	}
+
+	public Boolean checkPassword(String password) {
+		if(this.getPassword().toString().equals(password))
+			return true;
+		return false;
+	}
+  
+  
 	// Getters and setters
+	
 
 	public long getId() {
 		return id;
@@ -140,14 +203,6 @@ public class Orden implements Serializable {
 
 	public void setFechaRecepcionPesajeInicial(Date fechaRecepcionPesajeInicial) {
 		this.fechaRecepcionPesajeInicial = fechaRecepcionPesajeInicial;
-	}
-
-	public Date getFechaPrevistaCarga() {
-		return fechaPrevistaCarga;
-	}
-
-	public void setFechaPrevistaCarga(Date fechaPrevistaCarga) {
-		this.fechaPrevistaCarga = fechaPrevistaCarga;
 	}
 
 	public Date getFechaFinCarga() {
@@ -206,27 +261,27 @@ public class Orden implements Serializable {
 		this.estado = estado;
 	}
 
-	public DatosCarga getUltimosDatosCarga() {
+	public UltimoDatoCarga getUltimosDatosCarga() {
 		return ultimosDatosCarga;
 	}
 
-	public void setUltimosDatosCarga(DatosCarga ultimosDatosCarga) {
+	public void setUltimosDatosCarga(UltimoDatoCarga ultimosDatosCarga) {
 		this.ultimosDatosCarga = ultimosDatosCarga;
 	}
 
-	public DatosCarga getPromedioDatosCarga() {
+	public PromedioDatoCarga getPromedioDatosCarga() {
 		return promedioDatosCarga;
 	}
 
-	public void setPromedioDatosCarga(DatosCarga promedioDatosCarga) {
+	public void setPromedioDatosCarga(PromedioDatoCarga promedioDatosCarga) {
 		this.promedioDatosCarga = promedioDatosCarga;
 	}
 
-	public int getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(int password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
@@ -238,11 +293,11 @@ public class Orden implements Serializable {
 		this.fecuencia = fecuencia;
 	}
 
-	public double getPreset() {
+	public int getPreset() {
 		return preset;
 	}
 
-	public void setPreset(double preset) {
+	public void setPreset(int preset) {
 		this.preset = preset;
 	}
 
@@ -263,4 +318,29 @@ public class Orden implements Serializable {
 		this.pesoFinal = pesoFinal;
 	}
 
+	public Double getPesoInicial() {
+		return pesoInicial;
+	}
+
+	public void setPesoInicial(Double pesoInicial) {
+		this.pesoInicial = pesoInicial;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
 }

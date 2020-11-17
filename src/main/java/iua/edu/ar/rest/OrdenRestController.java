@@ -24,6 +24,8 @@ import io.swagger.annotations.ApiParam;
 import iua.edu.ar.business.IOrdenBusiness;
 import iua.edu.ar.business.exception.BusinessException;
 import iua.edu.ar.business.exception.NotFoundException;
+import iua.edu.ar.business.exception.PasswordException;
+import iua.edu.ar.model.DatoCarga;
 import iua.edu.ar.model.Orden;
 
 @RestController
@@ -132,6 +134,34 @@ public class OrdenRestController {
 	public ResponseEntity<String> delete(@PathVariable("id") Long id) {
 		try {
 			ordenBusiness.delete(id);
+			return new ResponseEntity<String>(HttpStatus.OK);
+		} catch (BusinessException e) {
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NotFoundException e) {
+			// TODO Auto-generated catch block
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@PostMapping(value = "/check-password", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> checkPassword(@RequestBody Orden orden){
+		try {
+			ordenBusiness.checkPassword(orden);
+			return new ResponseEntity<String>(HttpStatus.OK);
+		} catch (BusinessException e) {
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NotFoundException e) {
+			// TODO Auto-generated catch block
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		} catch (PasswordException e) {
+			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+		}
+	}
+	
+	@PostMapping(value = "/carga-datos/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> cargaDatos(@RequestBody DatoCarga datosCarga, @PathVariable("id") Long id){
+		try {
+			ordenBusiness.cargaDatos(datosCarga, id);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		} catch (BusinessException e) {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
