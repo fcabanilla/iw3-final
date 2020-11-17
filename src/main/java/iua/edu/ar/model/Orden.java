@@ -81,12 +81,12 @@ public class Orden implements Serializable {
 	private int estado = 0;
   
   @ApiModelProperty(notes = "Ultimo dato de carga", required = false)
-	@Column(length = 100, nullable = true)
+  @JoinColumn(nullable = true)
 	@OneToOne(cascade =  CascadeType.ALL)
 	private UltimoDatoCarga ultimosDatosCarga;
 
   @ApiModelProperty(notes = "Promedio de carga en un lapso de tiempo", required = false)
-	@Column(length = 100, nullable = true)
+	@JoinColumn(nullable = true)
 	@OneToOne(cascade =  CascadeType.ALL)
 	private PromedioDatoCarga promedioDatosCarga;
 
@@ -119,8 +119,6 @@ public class Orden implements Serializable {
 	@Column(length = 50, nullable = true, unique = true)
 	private String codigoExterno;
 	
-	@Column(length = 100, nullable = true)
-	private Double pesoInicial;
 
 	public void partialUpdate(Orden ordenDB) {
 		if(this.getCamion() == null) 
@@ -310,6 +308,14 @@ public class Orden implements Serializable {
 		this.pesoInicial = pesoInicial;
 	}
 	
+	public String getCodigoExterno() {
+		return codigoExterno;
+	}
+
+	public void setCodigoExterno(String codigoExterno) {
+		this.codigoExterno = codigoExterno;
+	}
+
 	public Double getPesoFinal() {
 		return pesoFinal;
 	}
@@ -317,30 +323,5 @@ public class Orden implements Serializable {
 	public void setPesoFinal(Double pesoFinal) {
 		this.pesoFinal = pesoFinal;
 	}
-
-	public Double getPesoInicial() {
-		return pesoInicial;
-	}
-
-	public void setPesoInicial(Double pesoInicial) {
-		this.pesoInicial = pesoInicial;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
 	
 }

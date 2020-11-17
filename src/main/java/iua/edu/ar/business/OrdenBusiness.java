@@ -58,7 +58,7 @@ public class OrdenBusiness implements IOrdenBusiness {
 	@Override
 	public Orden add(Orden orden) throws BusinessException {
 		try {
-			if (orden.checkBasicData())
+			if (orden.checkBasicData() && orden.getEstado() == 0)
 				orden.setEstado(1);
 
 			return ordenDAO.save(orden);
@@ -170,7 +170,7 @@ public void checkPassword(Orden orden) throws NotFoundException, BusinessExcepti
 	public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
 	    long diffInMillies = date2.getTime() - date1.getTime();
 	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
-
+	}
 	public void  addPesajeInicial(Orden orden) throws NotFoundException, BusinessException {
 		try {
 			Orden ordenDb= load(orden.getId());
