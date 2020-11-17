@@ -14,22 +14,29 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "Producto", description = "Combustible a cargarse")
 @Entity
 @Table(name = "productos")
 public class Producto implements Serializable {
 
 	private static final long serialVersionUID = 7431093605105709293L;
 
+	@ApiModelProperty(notes = "Identificador del producto, clave autogenerada", required = false)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-
+	
+	@ApiModelProperty(notes = "Nombre del producto", required = false)
 	@Column(length = 100)
 	private String nombre;
-
+	
+	@ApiModelProperty(notes = "Descripcion del producto", required = false)
 	@Column(length = 100, nullable = true)
 	private String descripcion;
-
+	
 	@OneToMany(targetEntity = Orden.class, mappedBy = "producto", fetch = FetchType.LAZY)
 	@JsonBackReference
 	private List<Orden> ordenList;

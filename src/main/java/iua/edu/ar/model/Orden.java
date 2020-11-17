@@ -16,87 +16,105 @@ import javax.persistence.Temporal;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "Orden", description = "Planilla de carga")
 @Entity
 @Table(name = "ordenes")
 public class Orden implements Serializable {
 
 	private static final long serialVersionUID = -4828422833183668198L;
-
+	
+	@ApiModelProperty(notes = "Identificador de la orden, clave autogenerada", required = false)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-
+	@ApiModelProperty(notes = "Fecha/Hora en la que el camion tiene turno", required = false)
 	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaRecepcion;
-
+	
+	@ApiModelProperty(notes = "Fecha/Hora en que se llevo acabo el pesaje inicial con el camion vacio", required = false)
 	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaRecepcionPesajeInicial;
-
+	
+	@ApiModelProperty(notes = "Fecha/Hora en el que se deberia cargar el camion", required = false)
 	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaPrevistaCarga;
 
+	@ApiModelProperty(notes = "Fecha/Hora en la cual dejo de cargarse el camion", required = false)
 	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaFinCarga;
-
+	
+	@ApiModelProperty(notes = "Fecha/Hora en la cual se peso el camion tras finalizar la carga", required = false)
 	@Column(length = 100, nullable = true)
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private Date fechaRecepcionPesajeFinal;
-
+	
+	@ApiModelProperty(notes = "Cliente que paga el servicio", required = false)
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
-
+	
+	@ApiModelProperty(notes = "Producto que se cargara", required = false)
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "producto_id")
 	private Producto producto;
-
+	
+	@ApiModelProperty(notes = "Vehiculo al cual se le realizara la carga", required = false)
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "camion_id")
 	private Camion camion;
-
+	
+	@ApiModelProperty(notes = "Conducto del camion al que se le cargara el producto", required = false)
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "chofer_id")
 	private Chofer chofer;
-
+	
+	@ApiModelProperty(notes = "Fase del proceso de carga en la que se encuentra", required = false)
 	@Column(length = 100)
 	private int estado;
-
+	
+	@ApiModelProperty(notes = "Ultimo dato de carga", required = false)
 	@Column(length = 100, nullable = true)
 	private DatosCarga ultimosDatosCarga;
-
+	
+	@ApiModelProperty(notes = "Promedio de carga en un lapso de tiempo", required = false)
 	@Column(length = 100, nullable = true)
 	private DatosCarga promedioDatosCarga;
-
+	
+	@ApiModelProperty(notes = "Contraseña autogenerada para cada orden", required = false)
 	@Column(length = 100, nullable = true)
 	private int password;
-
+	
+	@ApiModelProperty(notes = "Frecuencia en la que se registraran los datos de carga", required = false)
 	@Column(length = 100, nullable = true)
 	private int fecuencia;
-
+	
+	@ApiModelProperty(notes = "Peso del camion vacio", required = false)
 	@Column(length = 100, nullable = true)
 	private Double pesoInicial;
 	
+	@ApiModelProperty(notes = "Peso del camion luego de la carga", required = false)
 	@Column(length = 100, nullable = true)
 	private Double pesoFinal;
 
 	/*
 	 * Cambiar el modelado del preset
 	 */
-
+	@ApiModelProperty(notes = "Limite a cargar en el camion", required = false)
 	@Column(length = 100, nullable = true)
 	private double preset;
-
-	@Column(length = 50, nullable = true, unique = true)
-	private String codigoExterno;
+	
 
 	// Getters and setters
 
@@ -228,13 +246,7 @@ public class Orden implements Serializable {
 		this.preset = preset;
 	}
 
-	public String getCodigoExterno() {
-		return codigoExterno;
-	}
-
-	public void setCodigoExterno(String codigoExterno) {
-		this.codigoExterno = codigoExterno;
-	}
+	
 	public Double getPesoInicial() {
 		return pesoInicial;
 	}

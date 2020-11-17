@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import iua.edu.ar.business.IProductoBusiness;
 import iua.edu.ar.business.exception.BusinessException;
 import iua.edu.ar.business.exception.NotFoundException;
@@ -26,15 +29,17 @@ import iua.edu.ar.model.Producto;
 
 @RestController
 @RequestMapping(value = Constantes.URL_PRODUCTOS)
+@Api(value = "Productos", description = "Operaciones relacionadas con los productos", tags = { "Productos" })
 public class ProductoRestController {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private IProductoBusiness productoBusiness;
-
+	
+	@ApiOperation(value="Obtener una orden mediante el ID")
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Producto> load(@PathVariable("id") Long id) {
+	public ResponseEntity<Producto> load(@ApiParam(value = "El ID del producto que se desea obtener")@PathVariable("id") Long id) {
 
 		try {
 			return new ResponseEntity<Producto>(productoBusiness.load(id), HttpStatus.OK);
@@ -45,7 +50,7 @@ public class ProductoRestController {
 			return new ResponseEntity<Producto>(HttpStatus.NOT_FOUND);
 		}
 	}
-
+	@ApiOperation(value="Obtener una lista de productos")
 	@GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Producto>> list() {
 		try {
@@ -58,7 +63,7 @@ public class ProductoRestController {
 		}
 
 	}
-
+	@ApiOperation(value="Agregar Producto")
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> add(@RequestBody Producto producto) {
 		try {
@@ -71,7 +76,7 @@ public class ProductoRestController {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
+	@ApiOperation(value="Actualizar Producto")
 	@PutMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> update(@RequestBody Producto producto) {
 		try {
@@ -88,7 +93,8 @@ public class ProductoRestController {
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-
+	
+	@ApiOperation(value="Borrar Producto por Id")
 	@DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> delete(@PathVariable("id") Long id) {
 		try {

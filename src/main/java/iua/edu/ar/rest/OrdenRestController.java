@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import iua.edu.ar.business.IOrdenBusiness;
 import iua.edu.ar.business.exception.BusinessException;
 import iua.edu.ar.business.exception.NotFoundException;
@@ -25,6 +28,7 @@ import iua.edu.ar.model.Orden;
 
 @RestController
 @RequestMapping(value = Constantes.URL_ORDENES)
+@Api(value = "Ordenes", description = "Operaciones relacionadas con la carga de productos a camiones", tags = { "Ordenes" })
 public class OrdenRestController {
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
@@ -32,8 +36,9 @@ public class OrdenRestController {
 	@Autowired
 	private IOrdenBusiness ordenBusiness;
 
+	@ApiOperation(value="Obtener una orden mediante el ID")
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Orden> load(@PathVariable("id") Long id) {
+	public ResponseEntity<Orden> load(@ApiParam(value = "El ID del producto que se desea obtener")@PathVariable("id") Long id) {
 
 		try {
 			return new ResponseEntity<Orden>(ordenBusiness.load(id), HttpStatus.OK);
@@ -44,7 +49,8 @@ public class OrdenRestController {
 			return new ResponseEntity<Orden>(HttpStatus.NOT_FOUND);
 		}
 	}
-
+	
+	@ApiOperation(value="Obtener una lista de ordenes")
 	@GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Orden>> list() {
 		try {
@@ -57,7 +63,7 @@ public class OrdenRestController {
 		}
 
 	}
-
+	@ApiOperation(value="Agregar nueva orden")
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> add(@RequestBody Orden orden) {
 		try {
@@ -70,7 +76,7 @@ public class OrdenRestController {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
+	@ApiOperation(value="Actualizar Orden")
 	@PutMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> update(@RequestBody Orden orden) {
 		try {
@@ -88,6 +94,7 @@ public class OrdenRestController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
+	@ApiOperation(value="Ingresar pesaje inicial")
 	@PostMapping(value = "/pesaje-inicial", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> addPesajeInicial(@RequestBody Orden orden) {
 		try {
@@ -104,6 +111,7 @@ public class OrdenRestController {
 		}
 	}
 	
+	@ApiOperation(value="Ingresar pesaje final")
 	@PostMapping(value = "/pesaje-final", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> addPesajeFinal(@RequestBody Orden orden) {
 		try {
@@ -119,6 +127,7 @@ public class OrdenRestController {
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 		}
 	}
+	@ApiOperation(value="Borrar Orden")
 	@DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> delete(@PathVariable("id") Long id) {
 		try {

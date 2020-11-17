@@ -69,20 +69,7 @@ public class OrdenBusiness implements IOrdenBusiness {
 
 	}
 
-	@Override
-	// Sin uso actualmente
-	public Orden load(String codigoExterno) throws NotFoundException, BusinessException {
-		Optional<Orden> op;
-		try {
-			op = ordenDAO.findFirstByCodigoExterno(codigoExterno);
-		} catch (Exception e) {
-			throw new BusinessException(e);
-		}
-		if (!op.isPresent()) {
-			throw new NotFoundException("La orden con código externo " + codigoExterno + " no se encuentra en la BD");
-		}
-		return op.get();
-	}
+	
 
 	@Override
 	public void  addPesajeInicial(Orden orden) throws NotFoundException, BusinessException {
