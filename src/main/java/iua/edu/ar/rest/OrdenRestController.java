@@ -170,4 +170,18 @@ public class OrdenRestController {
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@ApiOperation(value="Se cierra la orden")
+	@PostMapping(value = "/cierre-orden", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> cierreOrden(@RequestBody Orden orden) throws NotFoundException {
+        try {
+            ordenBusiness.cierreOrden(orden);
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("location", Constantes.URL_ORDENES + '/' + orden.getId());
+            return new ResponseEntity<String>(responseHeaders, HttpStatus.CREATED);
+        } catch (BusinessException e) {
+
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

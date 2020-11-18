@@ -23,9 +23,11 @@ public interface IOrdenBusiness {
 	// Extras
 	public void checkPassword(Orden orden) throws NotFoundException, BusinessException, PasswordException;
 
-  public void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException;
+	public void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException;
 	
-  public void addPesajeInicial(Orden orden) throws NotFoundException, BusinessException;
+	public void addPesajeInicial(Orden orden) throws NotFoundException, BusinessException;
 	
-  public void addPesajeFinal(Orden orden) throws NotFoundException, BusinessException;
+	public void addPesajeFinal(Orden orden) throws NotFoundException, BusinessException;
+
+	public Void cierreOrden(Orden orden) throws BusinessException, NotFoundException;
 }
