@@ -2,17 +2,9 @@ package iua.edu.ar.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
+import javax.persistence.*;
+
+import iua.edu.ar.model.dto.*;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,6 +16,19 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 @DynamicUpdate
 @Table(name = "ordenes")
+@NamedNativeQuery(name = "Orden.findByOrdenConciliacion", query = "SELECT " + "o.peso_inicial, \r\n"
+        + "o.peso_final,\r\n" + "pdc.promedio_caudal,\r\n" + "pdc.promedio_temperatura,\r\n"
+        + "pdc.promedio_densidad\r\n"
+        + "FROM ordenes o INNER JOIN promedios_datos_carga pdc ON o.id = pdc.id;", resultSetMapping = "ordenMap")
+
+@SqlResultSetMapping(name = "ordenMap", classes = {
+        @ConstructorResult(columns = { @ColumnResult(name = "o.peso_inicial", type = Double.class),
+                @ColumnResult(name = "o.peso_final", type = Double.class),
+                @ColumnResult(name = "pdc.promedio_temperatura", type = Double.class),
+                @ColumnResult(name = "pdc.promedio_densidad", type = Double.class),
+                @ColumnResult(name = "pdc.promedio_caudal", type = Double.class) }, targetClass = ConciliacionDTO.class) })
+
+
 public class Orden implements Serializable {
 
 	private static final long serialVersionUID = -4828422833183668198L;
@@ -80,12 +85,12 @@ public class Orden implements Serializable {
 	@Column(length = 100)
 	private int estado = 0;
   
-  @ApiModelProperty(notes = "Ultimo dato de carga", required = false)
-  @JoinColumn(nullable = true)
+	@ApiModelProperty(notes = "Ultimo dato de carga", required = false)
+	@JoinColumn(nullable = true)
 	@OneToOne(cascade =  CascadeType.ALL)
 	private UltimoDatoCarga ultimosDatosCarga;
 
-  @ApiModelProperty(notes = "Promedio de carga en un lapso de tiempo", required = false)
+  	@ApiModelProperty(notes = "Promedio de carga en un lapso de tiempo", required = false)
 	@JoinColumn(nullable = true)
 	@OneToOne(cascade =  CascadeType.ALL)
 	private PromedioDatoCarga promedioDatosCarga;

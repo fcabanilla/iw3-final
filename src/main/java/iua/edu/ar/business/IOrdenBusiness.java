@@ -7,6 +7,7 @@ import iua.edu.ar.business.exception.NotFoundException;
 import iua.edu.ar.business.exception.PasswordException;
 import iua.edu.ar.model.DatoCarga;
 import iua.edu.ar.model.Orden;
+import iua.edu.ar.model.dto.ConciliacionDTO;
 
 public interface IOrdenBusiness {
 
@@ -29,5 +30,7 @@ public interface IOrdenBusiness {
 	
 	public void addPesajeFinal(Orden orden) throws NotFoundException, BusinessException;
 
-	public Void cierreOrden(Orden orden) throws BusinessException, NotFoundException;
+	public Orden cierreOrden(Orden orden) throws BusinessException, NotFoundException;
+
+	ConciliacionDTO conciliacion(Long id) throws NotFoundException, BusinessException;
 }

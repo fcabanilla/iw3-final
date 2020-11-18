@@ -15,7 +15,9 @@ import iua.edu.ar.business.exception.PasswordException;
 import iua.edu.ar.model.DatoCarga;
 import iua.edu.ar.model.Orden;
 import iua.edu.ar.model.OrdenDetalle;
+import iua.edu.ar.model.PromedioDatoCarga;
 import iua.edu.ar.model.UltimoDatoCarga;
+import iua.edu.ar.model.dto.ConciliacionDTO;
 import iua.edu.ar.model.persistence.OrdenDetalleRepository;
 import iua.edu.ar.model.persistence.OrdenRepository;
 
@@ -115,6 +117,9 @@ public class OrdenBusiness implements IOrdenBusiness {
 			UltimoDatoCarga ultimosDatosCarga = new UltimoDatoCarga(datosCarga.getMasaAcumulada(),
 					datosCarga.getDensidadProducto(), datosCarga.getTemperaturaProducto(), datosCarga.getCaudal());
 			ordenDB.setUltimosDatosCarga(ultimosDatosCarga);
+			PromedioDatoCarga promedioDatosCarga = new PromedioDatoCarga(datosCarga.getMasaAcumulada(),
+					datosCarga.getDensidadProducto(), datosCarga.getTemperaturaProducto(), datosCarga.getCaudal());
+			ordenDB.setPromedioDatosCarga(promedioDatosCarga);
 			add(ordenDB);
 
 			OrdenDetalle ordenDetalle = new OrdenDetalle();
@@ -141,7 +146,9 @@ public class OrdenBusiness implements IOrdenBusiness {
 				ordenDetalleDAO.save(ordenDetalle);
 			}
 
-		} catch (Exception e) {
+		} catch (NotFoundException el) {
+			throw new NotFoundException("No se encuentra la orden con id = " + id + ".");
+		}catch (Exception e) {
 			throw new BusinessException(e);
 		}
 
@@ -179,8 +186,8 @@ public class OrdenBusiness implements IOrdenBusiness {
 			} else {
 				throw new BusinessException("El estado de la orden es distinto a 1");
 			}
-		} catch (EmptyResultDataAccessException el) {
-			throw new NotFoundException("No se encuentra la orden con id = " + orden.getId() + ".");
+		} catch (NotFoundException el) {
+			throw new NotFoundException("No se encuentra la orden.");
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
@@ -209,17 +216,43 @@ public class OrdenBusiness implements IOrdenBusiness {
 	}
 
 	@Override
-	public Void cierreOrden(Orden orden) throws BusinessException, NotFoundException {
-		Orden ordenDB = load(orden.getId());
+	public Orden cierreOrden(Orden orden) throws BusinessException, NotFoundException {
+		try {
+			Orden ordenDB = load(orden.getId());
 
-		if (ordenDB.getEstado() == 2) {
+			if (!(ordenDB.getEstado() == 2)) 
+				throw new BusinessException("El estado no se encuentra en estado 2, no se cambiara el valor");
+				
 			ordenDB.setEstado(3);
-			ordenDAO.save(ordenDB);
-			return null;
+			ordenDB.setFechaFinCarga(new Date());
+			return ordenDAO.save(ordenDB);
+
+		} catch (NotFoundException el) {
+			throw new NotFoundException("No se encuentra la orden.");
+		} catch (Exception e) {
+			throw new BusinessException(e);
 		}
 
-		throw new BusinessException("El estado no se encuentra en estado 2, no se cambiara el valor");
-
 	}
+	
+	@Override
+    public ConciliacionDTO conciliacion(Long id) throws NotFoundException, BusinessException {
+        Orden ordenDb = load(id);
+
+        try {
+            if (ordenDb.getEstado() != 4)
+                throw new BusinessException("El estado de la orden no corresponde para conciliacion");
+
+            Double pInicial = ordenDb.getPesoInicial();
+            Double pFinal = ordenDb.getPesoFinal();
+            PromedioDatoCarga promDatoCarga = ordenDb.getPromedioDatosCarga();
+            ConciliacionDTO conciliacion = new ConciliacionDTO(pInicial, pFinal, promDatoCarga, ordenDb.getUltimosDatosCarga());
+            
+            return conciliacion;
+        } catch (Exception e) {
+            throw new BusinessException(e);
+        }
+
+    }
 
 }

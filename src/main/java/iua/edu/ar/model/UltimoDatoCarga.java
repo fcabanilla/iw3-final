@@ -13,7 +13,7 @@ public class UltimoDatoCarga extends DatoCarga implements Serializable {
 		super();
 	}
 	
-	public UltimoDatoCarga(long masaAcumulada, long densidadProducto, long temperaturaProducto,	long caudal) {
+	public UltimoDatoCarga(Double masaAcumulada, Double densidadProducto, Double temperaturaProducto,Double caudal) {
 		super(masaAcumulada, densidadProducto, temperaturaProducto, caudal);
 		// TODO Auto-generated constructor stub
 	}

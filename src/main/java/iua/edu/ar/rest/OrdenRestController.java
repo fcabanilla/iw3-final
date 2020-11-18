@@ -27,6 +27,7 @@ import iua.edu.ar.business.exception.NotFoundException;
 import iua.edu.ar.business.exception.PasswordException;
 import iua.edu.ar.model.DatoCarga;
 import iua.edu.ar.model.Orden;
+import iua.edu.ar.model.dto.ConciliacionDTO;
 
 @RestController
 @RequestMapping(value = Constantes.URL_ORDENES)
@@ -183,5 +184,18 @@ public class OrdenRestController {
 
             return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+	@ApiOperation(value="Se solicita la conciliacion")
+	@GetMapping(value = "/conciliacion/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ConciliacionDTO> listConciliacion(@PathVariable("id") Long id) throws NotFoundException {
+        try {
+
+            return new ResponseEntity<ConciliacionDTO>(ordenBusiness.conciliacion(id), HttpStatus.OK);
+
+        } catch (BusinessException e) {
+            // TODO Auto-generated catch block
+            return new ResponseEntity<ConciliacionDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

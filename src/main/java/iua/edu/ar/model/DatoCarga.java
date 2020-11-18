@@ -21,8 +21,8 @@ public class DatoCarga implements Serializable {
 	
 	private static final long serialVersionUID = -8975778939793530631L;
 		
-	public DatoCarga(long masaAcumulada, long densidadProducto, long temperaturaProducto,
-			long caudal) {
+	public DatoCarga(Double masaAcumulada, Double densidadProducto, Double temperaturaProducto,
+			Double caudal) {
 //		super();
 		this.masaAcumulada = masaAcumulada;
 		this.densidadProducto = densidadProducto;
@@ -42,50 +42,29 @@ public class DatoCarga implements Serializable {
 	protected Date fecha;
 
 	@Column(length = 100)
-	protected long masaAcumulada;
+	protected Double masaAcumulada;
 
 	@Column(length = 100)
-	protected long densidadProducto;
+	protected Double densidadProducto;
 
 	@Column(length = 100)
-	protected long temperaturaProducto;
+	protected Double temperaturaProducto;
 
 	@Column(length = 100)
-	protected long caudal;
-
+	protected Double caudal;
+	
+	
 	/*
 	 * GETTERS AND SETTERS
 	 */
+	
+
 	public long getId() {
 		return id;
 	}
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public long getMasaAcumulada() {
-		return masaAcumulada;
-	}
-
-	public void setMasaAcumulada(long masaAcumulada) {
-		this.masaAcumulada = masaAcumulada;
-	}
-
-	public long getDensidadProducto() {
-		return densidadProducto;
-	}
-
-	public void setDensidadProducto(long densidadProducto) {
-		this.densidadProducto = densidadProducto;
-	}
-
-	public long getTemperaturaProducto() {
-		return temperaturaProducto;
-	}
-
-	public void setTemperaturaProducto(long temperaturaProducto) {
-		this.temperaturaProducto = temperaturaProducto;
 	}
 
 	public Date getFecha() {
@@ -96,12 +75,38 @@ public class DatoCarga implements Serializable {
 		this.fecha = fecha;
 	}
 
-	public long getCaudal() {
+	public Double getMasaAcumulada() {
+		return masaAcumulada;
+	}
+
+	public void setMasaAcumulada(Double masaAcumulada) {
+		this.masaAcumulada = masaAcumulada;
+	}
+
+	public Double getDensidadProducto() {
+		return densidadProducto;
+	}
+
+	public void setDensidadProducto(Double densidadProducto) {
+		this.densidadProducto = densidadProducto;
+	}
+
+	public Double getTemperaturaProducto() {
+		return temperaturaProducto;
+	}
+
+	public void setTemperaturaProducto(Double temperaturaProducto) {
+		this.temperaturaProducto = temperaturaProducto;
+	}
+
+	public Double getCaudal() {
 		return caudal;
 	}
 
-	public void setCaudal(long caudal) {
+	public void setCaudal(Double caudal) {
 		this.caudal = caudal;
 	}
+
+
 
 }

@@ -6,10 +6,14 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ultimos_datos_carga")
+@Table(name = "promedio_datos_carga")
 public class PromedioDatoCarga extends DatoCarga implements Serializable {
 
-	public PromedioDatoCarga(long masaAcumulada, long densidadProducto, long temperaturaProducto, long caudal) {
+	public PromedioDatoCarga() {
+		super();
+	}
+	
+	public PromedioDatoCarga(Double masaAcumulada, Double densidadProducto, Double temperaturaProducto, Double caudal) {
 		super(masaAcumulada, densidadProducto, temperaturaProducto, caudal);
 		// TODO Auto-generated constructor stub
 	}

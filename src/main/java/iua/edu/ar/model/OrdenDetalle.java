@@ -24,10 +24,10 @@ public class OrdenDetalle implements Serializable {
 	
 
 	public OrdenDetalle(Orden orden, 
-						long masaAcumulada, 
-						long densidadProducto,
-						long temperaturaProducto, 
-						long caudal) {
+			Double masaAcumulada, 
+			Double densidadProducto,
+			Double temperaturaProducto, 
+			Double caudal) {
 		super();
 		this.orden = orden;
 		this.masaAcumulada = masaAcumulada;
@@ -51,73 +51,93 @@ public class OrdenDetalle implements Serializable {
 	protected Date fecha;
 
 	@Column(length = 100)
-	protected long masaAcumulada;
+	protected Double masaAcumulada;
 
 	@Column(length = 100)
-	protected long densidadProducto;
+	protected Double densidadProducto;
 
 	@Column(length = 100)
-	protected long temperaturaProducto;
+	protected Double temperaturaProducto;
 
 	@Column(length = 100)
-	protected long caudal;
-
+	protected Double caudal;
+	
 	/*
 	 * GETTERS AND SETTERS
 	 */
+
+	public Orden getOrden() {
+		return orden;
+	}
+
+
+	public void setOrden(Orden orden) {
+		this.orden = orden;
+	}
+
+
 	public long getId() {
 		return id;
 	}
+
 
 	public void setId(long id) {
 		this.id = id;
 	}
 
-	public long getMasaAcumulada() {
-		return masaAcumulada;
-	}
-
-	public void setMasaAcumulada(long masaAcumulada) {
-		this.masaAcumulada = masaAcumulada;
-	}
-
-	public long getDensidadProducto() {
-		return densidadProducto;
-	}
-
-	public void setDensidadProducto(long densidadProducto) {
-		this.densidadProducto = densidadProducto;
-	}
-
-	public long getTemperaturaProducto() {
-		return temperaturaProducto;
-	}
-
-	public void setTemperaturaProducto(long temperaturaProducto) {
-		this.temperaturaProducto = temperaturaProducto;
-	}
 
 	public Date getFecha() {
 		return fecha;
 	}
 
+
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 
-	public long getCaudal() {
+
+	public Double getMasaAcumulada() {
+		return masaAcumulada;
+	}
+
+
+	public void setMasaAcumulada(Double masaAcumulada) {
+		this.masaAcumulada = masaAcumulada;
+	}
+
+
+	public Double getDensidadProducto() {
+		return densidadProducto;
+	}
+
+
+	public void setDensidadProducto(Double densidadProducto) {
+		this.densidadProducto = densidadProducto;
+	}
+
+
+	public Double getTemperaturaProducto() {
+		return temperaturaProducto;
+	}
+
+
+	public void setTemperaturaProducto(Double temperaturaProducto) {
+		this.temperaturaProducto = temperaturaProducto;
+	}
+
+
+	public Double getCaudal() {
 		return caudal;
 	}
 
-	public void setCaudal(long caudal) {
+
+	public void setCaudal(Double caudal) {
 		this.caudal = caudal;
 	}
-	public Orden getOrden() {
-		return orden;
-	}
-	public void setOrden(Orden orden) {
-		this.orden = orden;
-	}
+
+
+	
+	
 	
 
 	
