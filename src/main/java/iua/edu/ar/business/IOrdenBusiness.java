@@ -21,16 +21,16 @@ public interface IOrdenBusiness {
 
 	public void delete(Long id) throws NotFoundException, BusinessException;
 
-	// Extras
-	public void checkPassword(Orden orden) throws NotFoundException, BusinessException, PasswordException;
-
-	public void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException;
+	// NEGOCIO
+	public void addPesajeInicial		(Orden orden) 					throws NotFoundException, BusinessException;
 	
-	public void addPesajeInicial(Orden orden) throws NotFoundException, BusinessException;
+	public void checkPassword			(Orden orden) 					throws NotFoundException, BusinessException, PasswordException;
+
+	public void cargaDatos				(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException;	
 	
-	public void addPesajeFinal(Orden orden) throws NotFoundException, BusinessException;
+	public void addPesajeFinal			(Orden orden) 					throws NotFoundException, BusinessException;
 
-	public Orden cierreOrden(Orden orden) throws BusinessException, NotFoundException;
+	public Orden cierreOrden			(Orden orden) 					throws BusinessException, NotFoundException;
 
-	ConciliacionDTO conciliacion(Long id) throws NotFoundException, BusinessException;
+	public ConciliacionDTO conciliacion	(Long id) 						throws NotFoundException, BusinessException;
 }

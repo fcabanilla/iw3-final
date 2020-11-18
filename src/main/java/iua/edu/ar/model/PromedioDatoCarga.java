@@ -17,6 +17,11 @@ public class PromedioDatoCarga extends DatoCarga implements Serializable {
 		super(masaAcumulada, densidadProducto, temperaturaProducto, caudal);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public PromedioDatoCarga(Double densidadProducto, Double temperaturaProducto, Double caudal) {
+		super(densidadProducto, temperaturaProducto, caudal);
+
+	}
 
 	private static final long serialVersionUID = -3470409984466313024L;
 	

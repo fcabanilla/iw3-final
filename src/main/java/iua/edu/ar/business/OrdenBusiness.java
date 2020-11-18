@@ -99,6 +99,7 @@ public class OrdenBusiness implements IOrdenBusiness {
 	@Override
 	public void checkPassword(Orden orden) throws NotFoundException, BusinessException, PasswordException {
 		Orden ordenDB = load(orden.getId());
+		
 		if (orden.checkPassword(ordenDB.getPassword()) && ordenDB.getEstado() == 2) {
 			return;
 		}
@@ -107,35 +108,43 @@ public class OrdenBusiness implements IOrdenBusiness {
 	}
 
 	@Override
-	public void cargaDatos(DatoCarga datosCarga, Long id) throws NotFoundException, BusinessException {
+	/**
+	 * Funcion para cargar los datos del detalle de una orden
+	 * 
+	 * @param datosCarga    Todos los datos recibidos por el sistema externo
+	 * @param idOrden	    Id de la orden
+	 */
+	public void cargaDatos(DatoCarga datosCarga, Long idOrden) throws NotFoundException, BusinessException {
 		Orden ordenDB;
 		try {
-			ordenDB = load(id);
+			ordenDB = load(idOrden);
 			if (ordenDB.getEstado() != 2)
 				throw new BusinessException("Estado incorrecto");
 
-			UltimoDatoCarga ultimosDatosCarga = new UltimoDatoCarga(datosCarga.getMasaAcumulada(),
-					datosCarga.getDensidadProducto(), datosCarga.getTemperaturaProducto(), datosCarga.getCaudal());
+			UltimoDatoCarga ultimosDatosCarga = new UltimoDatoCarga(
+					datosCarga.getMasaAcumulada(),
+					datosCarga.getDensidadProducto(), 
+					datosCarga.getTemperaturaProducto(), 
+					datosCarga.getCaudal());
 			ordenDB.setUltimosDatosCarga(ultimosDatosCarga);
-			PromedioDatoCarga promedioDatosCarga = new PromedioDatoCarga(datosCarga.getMasaAcumulada(),
-					datosCarga.getDensidadProducto(), datosCarga.getTemperaturaProducto(), datosCarga.getCaudal());
-			ordenDB.setPromedioDatosCarga(promedioDatosCarga);
+
 			add(ordenDB);
 
 			OrdenDetalle ordenDetalle = new OrdenDetalle();
 
-			List<OrdenDetalle> test = ordenDetalleDAO.findByOrdenId(id);
+			List<OrdenDetalle> test = ordenDetalleDAO.findByOrdenId(idOrden);
 			ordenDetalle.setCaudal(datosCarga.getCaudal());
 			ordenDetalle.setDensidadProducto(datosCarga.getDensidadProducto());
 			ordenDetalle.setMasaAcumulada(datosCarga.getMasaAcumulada());
 			ordenDetalle.setOrden(ordenDB);
 			ordenDetalle.setTemperaturaProducto(datosCarga.getTemperaturaProducto());
+			
 			if (test.isEmpty()) {
 				ordenDetalleDAO.save(ordenDetalle);
 				return;
 			}
 
-			OrdenDetalle test2 = ordenDetalleDAO.findFirstByOrdenIdOrderByFecha(id);
+			OrdenDetalle test2 = ordenDetalleDAO.findFirstByOrdenIdOrderByFecha(idOrden);
 
 			Date date1 = test2.getFecha();
 
@@ -147,7 +156,7 @@ public class OrdenBusiness implements IOrdenBusiness {
 			}
 
 		} catch (NotFoundException el) {
-			throw new NotFoundException("No se encuentra la orden con id = " + id + ".");
+			throw new NotFoundException("No se encuentra la orden con id = " + idOrden + ".");
 		}catch (Exception e) {
 			throw new BusinessException(e);
 		}
@@ -171,18 +180,18 @@ public class OrdenBusiness implements IOrdenBusiness {
 
 	public void addPesajeInicial(Orden orden) throws NotFoundException, BusinessException {
 		try {
-			Orden ordenDb = load(orden.getId());
-			if (ordenDb.getEstado() == 1) {
+			Orden ordenDB = load(orden.getId());
+			if (ordenDB.getEstado() == 1) {
 
-				ordenDb.setPesoInicial(orden.getPesoInicial());
-				ordenDb.setFechaRecepcionPesajeInicial(orden.getFechaRecepcionPesajeInicial());
-				ordenDb.setEstado(2);
+				ordenDB.setPesoInicial(orden.getPesoInicial());
+				ordenDB.setFechaRecepcionPesajeInicial(new Date());
+				ordenDB.setEstado(2);
 				String pass = "";
 				for (int i = 0; i < 5; i++) {
 					pass = (int) (Math.random() * 9) + 1 + pass;
 				}
-				ordenDb.setPassword(pass);
-				ordenDAO.save(ordenDb);
+				ordenDB.setPassword(pass);
+				ordenDAO.save(ordenDB);
 			} else {
 				throw new BusinessException("El estado de la orden es distinto a 1");
 			}
@@ -197,13 +206,13 @@ public class OrdenBusiness implements IOrdenBusiness {
 	@Override
 	public void addPesajeFinal(Orden orden) throws NotFoundException, BusinessException {
 		try {
-			Orden ordenDb = load(orden.getId());
-			if (ordenDb.getEstado() == 3) {
+			Orden ordenDB = load(orden.getId());
+			if (ordenDB.getEstado() == 3) {
 
-				ordenDb.setPesoFinal(orden.getPesoFinal());
-				ordenDb.setFechaRecepcionPesajeFinal(orden.getFechaRecepcionPesajeFinal());
-				ordenDb.setEstado(4);
-				ordenDAO.save(ordenDb);
+				ordenDB.setPesoFinal(orden.getPesoFinal());
+				ordenDB.setEstado(4);
+				ordenDB.setFechaRecepcionPesajeFinal(new Date());
+				ordenDAO.save(ordenDB);
 
 			} else {
 				throw new BusinessException("El estado de la orden es distinto a 1");
@@ -220,11 +229,19 @@ public class OrdenBusiness implements IOrdenBusiness {
 		try {
 			Orden ordenDB = load(orden.getId());
 
-			if (!(ordenDB.getEstado() == 2)) 
+			if (ordenDB.getEstado() != 2) 
 				throw new BusinessException("El estado no se encuentra en estado 2, no se cambiara el valor");
-				
-			ordenDB.setEstado(3);
+						
 			ordenDB.setFechaFinCarga(new Date());
+			
+			PromedioDatoCarga promedios = ordenDAO.findPromedios(orden.getId());
+			
+			promedios.setMasaAcumulada(ordenDB.getUltimosDatosCarga().getMasaAcumulada());
+			promedios.setFecha(new Date());
+			
+			ordenDB.setPromedioDatosCarga(promedios);
+			
+			ordenDB.setEstado(3);
 			return ordenDAO.save(ordenDB);
 
 		} catch (NotFoundException el) {

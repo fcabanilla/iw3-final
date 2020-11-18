@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
-import iua.edu.ar.model.dto.*;
-
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,18 +14,30 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 @DynamicUpdate
 @Table(name = "ordenes")
-@NamedNativeQuery(name = "Orden.findByOrdenConciliacion", query = "SELECT " + "o.peso_inicial, \r\n"
-        + "o.peso_final,\r\n" + "pdc.promedio_caudal,\r\n" + "pdc.promedio_temperatura,\r\n"
-        + "pdc.promedio_densidad\r\n"
-        + "FROM ordenes o INNER JOIN promedios_datos_carga pdc ON o.id = pdc.id;", resultSetMapping = "ordenMap")
 
-@SqlResultSetMapping(name = "ordenMap", classes = {
-        @ConstructorResult(columns = { @ColumnResult(name = "o.peso_inicial", type = Double.class),
-                @ColumnResult(name = "o.peso_final", type = Double.class),
-                @ColumnResult(name = "pdc.promedio_temperatura", type = Double.class),
-                @ColumnResult(name = "pdc.promedio_densidad", type = Double.class),
-                @ColumnResult(name = "pdc.promedio_caudal", type = Double.class) }, targetClass = ConciliacionDTO.class) })
+@NamedNativeQuery(
+		name = "Orden.findPromedios", 
+		query = "SELECT \n" + 
+				"  avg(densidad_producto) AS Densidad\n" + 
+				", avg(temperatura_producto) AS Temperatura\n" + 
+				", avg(caudal) AS Caudal\n" + 
+				"FROM ordenes o\n" + 
+				"INNER JOIN orden_detalle od ON od.orden_id = o.id\n" + 
+				"WHERE o.id = ?1", resultSetMapping = "promediosMap")
 
+@SqlResultSetMapping(
+        name="promediosMap",
+        classes = {
+                @ConstructorResult(
+                        columns = {                               
+                                @ColumnResult(name = "Densidad"		, type = Double.class),
+                                @ColumnResult(name = "Temperatura"	, type = Double.class),
+                                @ColumnResult(name = "Caudal"		, type = Double.class),
+                        },
+                        targetClass = PromedioDatoCarga.class
+                )
+        }
+)
 
 public class Orden implements Serializable {
 
@@ -103,7 +113,7 @@ public class Orden implements Serializable {
 	
 	@ApiModelProperty(notes = "Frecuencia en la que se registraran los datos de carga", required = false)
 	@Column(length = 100, nullable = true)
-	private int fecuencia;
+	private long fecuencia = 10;
 	
 	@ApiModelProperty(notes = "Peso del camion vacio", required = false)
 	@Column(length = 100, nullable = true)
@@ -174,8 +184,8 @@ public class Orden implements Serializable {
 		return true;
 	}
 
-	public Boolean checkPassword(String password) {
-		if(this.getPassword().toString().equals(password))
+	public Boolean checkPassword(String passwordVerdadera) {
+		if(this.getPassword().toString().equals(passwordVerdadera))
 			return true;
 		return false;
 	}
@@ -288,11 +298,11 @@ public class Orden implements Serializable {
 		this.password = password;
 	}
 
-	public int getFecuencia() {
+	public long getFecuencia() {
 		return fecuencia;
 	}
 
-	public void setFecuencia(int fecuencia) {
+	public void setFecuencia(long fecuencia) {
 		this.fecuencia = fecuencia;
 	}
 

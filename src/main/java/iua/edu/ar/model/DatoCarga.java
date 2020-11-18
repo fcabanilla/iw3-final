@@ -30,6 +30,12 @@ public class DatoCarga implements Serializable {
 		this.caudal = caudal;
 	}
 	
+	public DatoCarga(Double densidadProducto, Double temperaturaProducto, Double caudal) {
+		this.densidadProducto = densidadProducto;
+		this.temperaturaProducto = temperaturaProducto;
+		this.caudal = caudal;
+	}
+	
 	public DatoCarga() {
 		
 	}
